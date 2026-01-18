@@ -59,15 +59,16 @@ window.updateTimerHeaders = function () {
     if (cardParamic) cardParamic.textContent = t.timeline_paramic;
 
     // 2. Update Button Text
-    document.querySelectorAll('.btn-timer.start').forEach(b => {
-        // If active (Stop), don't change to Start
-        if (!b.classList.contains('active')) {
-            b.textContent = t.btn_start;
+    ['hunt', 'cooldown', 'smudge', 'paramic'].forEach(id => {
+        const b = document.querySelector(`#card-${id} .btn-timer.start`);
+        if (!b) return;
+        const timer = timers[id];
+        if (timer && timer.isRunning) {
+            b.textContent = t.btn_reset || "Reset";
         } else {
-            b.textContent = t.btn_stop;
+            b.textContent = t.btn_start;
         }
     });
-    document.querySelectorAll('.btn-timer.reset').forEach(b => b.textContent = t.btn_reset);
 
     // 3. Re-render Markers (to update labels)
     renderMarkers('hunt');
@@ -78,13 +79,15 @@ window.updateTimerHeaders = function () {
 
 function initTimelines() {
     ['hunt', 'cooldown', 'smudge', 'paramic'].forEach(id => {
-        timers[id] = {
-            startTime: 0,
-            elapsed: 0,
-            interval: null,
-            isRunning: false,
-            triggeredMarkers: new Set() // Track triggered markers
-        };
+        if (!timers[id]) {
+            timers[id] = {
+                startTime: 0,
+                elapsed: 0,
+                interval: null,
+                isRunning: false,
+                triggeredMarkers: new Set()
+            };
+        }
         renderMarkers(id);
     });
 }
@@ -129,40 +132,57 @@ function renderMarkers(id) {
 
     // (End Marker Removed)
 
-    // Initial UI Update to show "00:00 / MM:SS"
+    // Initial UI Update (preserve current elapsed if running)
     const display = document.querySelector(`#card-${id} .timer-display`);
     if (display) {
-        display.textContent = `${formatTime(0)} / ${formatTime(config.maxScale)}`;
+        const timer = timers[id] || { elapsed: 0 };
+        display.textContent = `${formatTime(timer.elapsed)} / ${formatTime(config.maxScale)}`;
     }
 }
 
-// TOGGLE (Start/Stop)
+// TOGGLE (Start/Reset)
 window.toggleTimer = function (id) {
     const timer = timers[id];
     const btn = document.querySelector(`#card-${id} .btn-timer.start`);
     const t = TRANSLATIONS[currentLang];
+    const config = TIMELINE_CONFIG[id];
 
     if (timer.isRunning) {
-        // STOP
+        // IF RUNNING -> RESET
         clearInterval(timer.interval);
         timer.isRunning = false;
-        btn.textContent = t.btn_start;
+        timer.elapsed = 0;
+        timer.triggeredMarkers.clear();
         btn.classList.remove('active');
+        // Reset label to Start
+        btn.textContent = t.btn_start;
+        updateUI(id);
     } else {
-        // START
+        // IF STOPPED -> START
         // Resume audio context on user interaction
         if (audioCtx.state === 'suspended') audioCtx.resume();
 
         timer.startTime = Date.now() - (timer.elapsed * 1000);
         timer.isRunning = true;
-        btn.textContent = t.btn_stop;
         btn.classList.add('active');
+        // Change label to Reset (or stop icon if styled)
+        btn.textContent = t.btn_reset || "Reset";
 
         timer.interval = setInterval(() => {
             const now = Date.now();
             timer.elapsed = (now - timer.startTime) / 1000;
+
+            // AUTO STOP
+            if (timer.elapsed >= config.maxScale) {
+                timer.elapsed = config.maxScale;
+                clearInterval(timer.interval);
+                timer.isRunning = false;
+                btn.textContent = t.btn_start;
+                btn.classList.remove('active');
+            }
+
             updateUI(id);
-        }, 100); // 10fps update for smoothness
+        }, 100);
     }
 }
 

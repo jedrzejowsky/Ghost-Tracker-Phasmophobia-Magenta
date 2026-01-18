@@ -668,10 +668,10 @@ h2 {
 
 .timeline-progress {
     height: 100%;
-    background: var(--accent-color);
+    background: var(--excluded-color);
     width: 0%;
     border-radius: 5px;
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
     transition: width 0.1s linear;
 }
 
@@ -775,18 +775,32 @@ h2 {
 }
 
 .btn-timer.start {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: var(--excluded-color);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .btn-timer.start:hover {
-    background: rgba(0, 255, 200, 0.1);
+    transform: scale(1.1);
+    background: #ff6666;
 }
 
 .btn-timer.active {
-    background: rgba(255, 77, 77, 0.1);
-    border-color: var(--excluded-color);
-    color: var(--excluded-color);
+    background: #fff;
+    color: var(--bg-color);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
 

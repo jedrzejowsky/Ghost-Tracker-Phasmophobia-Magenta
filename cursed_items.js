@@ -1,7 +1,7 @@
 const CURSED_ITEMS_DATA = [
     {
         name: { en: "Music Box", pl: "Pozytywka", ru: "Музыкальная шкатулка" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/5/5f/Music_box_display.jpg/revision/latest/scale-to-width-down/1000?cb=20230131144318",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/5/5f/Music_box_display.jpg/revision/latest?cb=20230131144318",
         icon: "🎶",
         description: {
             en: `
@@ -18,238 +18,282 @@ const CURSED_ITEMS_DATA = [
                 <p><strong>Efekt:</strong> Po aktywacji duch śpiewa, jeśli jest w promieniu 20m. Można ją postawić, aby duch się zmaterializował i podszedł do niej (idealne do zdjęcia).</p>
                 <div class="stats-grid">
                     <div class="stat-box"><span class="label">Koszt Sanity</span><span class="value">2.5% / sek</span></div>
-                    <div class="stat-box"><span class="label">Zasięg</span><span class="value">20m (Śpiew) / 5m (Spacer)</span></div>
+                    <div class="stat-box"><span class="label">Zasięg</span><span class="value">20m (Śpiew) / 5m (Podejście)</span></div>
                 </div>
-                <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Jeśli duch dotknie pozytywki.<br>• Jeśli RZUCISZ pozytywkę podczas grania.<br>• Jeśli melodia zagra do końca (30s).</p>
+                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Jeśli duch dotknie pozytywki.<br>• Jeśli rzucisz grającą pozytywkę.<br>• Jeśli gra przez pełne 30s.</p>
             </div>`,
             ru: `
             <div class="cursed-details">
-                <p><strong>Эффект:</strong> Призрак поет, если он в пределах 20м. Призрак выходит и идет к шкатулке (идеально для фото).</p>
+                <p><strong>Эффект:</strong> При активации призрак подпевает в радиусе 20м. Можно поставить, чтобы призрак материализовался и пошел к ней.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Рассудок</span><span class="value">-2.5% / сек</span></div>
-                    <div class="stat-box"><span class="label">Радиус</span><span class="value">20м (Пение) / 5м (Ходьба)</span></div>
+                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">2.5% / сек</span></div>
+                    <div class="stat-box"><span class="label">Радиус</span><span class="value">20м (песня) / 5м (ходьба)</span></div>
                 </div>
-                <p class="danger"><strong>Начало охоты:</strong><br>• Если призрак коснется шкатулки.<br>• Если БРОСИТЬ играющую шкатулку.<br>• Если мелодия доиграет до конца (30с).</p>
+                <p class="danger"><strong>Проклятая охота:</strong><br>• Если призрак коснется шкатулки.<br>• Если БРОСИТЬ играющую шкатулку.<br>• По окончании мелодии (30с).</p>
             </div>`
         }
     },
     {
-        name: { en: "Ouija Board", pl: "Tablica Ouija", ru: "Доска Уиджи" },
+        name: { en: "Ouija Board", pl: "Tabliczka Ouija", ru: "Доска Уиджи" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/2/2f/Ouija_Board_New.png/revision/latest?cb=20211210172553",
-        icon: "☠️",
+        icon: "👻",
         description: {
             en: `
             <div class="cursed-details">
-                <p><strong>Effect:</strong> Ask questions like "Where are you?" (Room), "Bone" (Bone Location), or "Hide and Seek" (Count to 5 then Hunt).</p>
+                <p><strong>Effect:</strong> Ask the ghost questions (Location, Age, Bone, etc.) at the cost of sanity. Must say "Goodbye" to deactivate safely.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Location Q</span><span class="value">-50% Sanity</span></div>
-                    <div class="stat-box"><span class="label">General Q</span><span class="value">-5% / -20% Sanity</span></div>
+                    <div class="stat-box"><span class="label">Sanity Drain</span><span class="value">5% - 50%</span></div>
+                    <div class="stat-box"><span class="label">Success Rate</span><span class="value">100%</span></div>
                 </div>
-                <p class="danger"><strong>Hunt Trigger:</strong><br>• Asking meaningful Q with insufficient sanity.<br>• Walking away without saying "Goodbye".<br>• Asking "Hide and Seek".</p>
+                <p class="danger"><strong>Hunt Trigger:</strong><br>• If you walk away without saying "Goodbye".<br>• If you have 0% sanity when asking.<br>• Saying 'Hide and Seek'.</p>
             </div>`,
             pl: `
             <div class="cursed-details">
-                <p><strong>Efekt:</strong> Zadawaj pytania np. "Where are you?" (Pokój), "Bone" (Kość), lub "Hide and Seek" (Odliczanie do polowania).</p>
+                <p><strong>Efekt:</strong> Pozwala zadawać duchowi pytania (Lokalizacja, Wiek, Kość) kosztem Sanity. Musisz powiedzieć "Goodbye", aby bezpiecznie ją wyłączyć.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Pytanie o Lokalizację</span><span class="value">-50% Sanity</span></div>
-                    <div class="stat-box"><span class="label">Zwykłe Pytania</span><span class="value">-5% / -20% Sanity</span></div>
+                    <div class="stat-box"><span class="label">Koszt Sanity</span><span class="value">5% - 50%</span></div>
+                    <div class="stat-box"><span class="label">Skuteczność</span><span class="value">100%</span></div>
                 </div>
-                <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Zadanie pytania mając za mało sanity.<br>• Odejsćie bez powiedzenia "Goodbye".<br>• Pytanie "Hide and Seek" (Chowany).</p>
+                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Jeśli odejdziesz bez pożegnania ("Goodbye").<br>• Jeśli masz 0% sanity zadając pytanie.<br>• Powiesz "Hide and Seek".</p>
             </div>`,
             ru: `
             <div class="cursed-details">
-                <p><strong>Эффект:</strong> Вопросы: "Where are you?" (Комната), "Bone" (Кость), или "Hide and Seek" (Прятки - охота).</p>
+                <p><strong>Эффект:</strong> Задавайте вопросы (локация, кость, возраст) ценой рассудка. Нужно сказать 'Goodbye', чтобы выключить.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Локация</span><span class="value">-50% Рассудка</span></div>
-                    <div class="stat-box"><span class="label">Обычный вопрос</span><span class="value">-5% / -20% Рассудка</span></div>
+                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">5% - 50%</span></div>
+                    <div class="stat-box"><span class="label">Шанс ответа</span><span class="value">100%</span></div>
                 </div>
-                <p class="danger"><strong>Начало охоты:</strong><br>• Вопрос без достаточного рассудка.<br>• Уход без "Goodbye".<br>• Вопрос "Hide and Seek".</p>
+                <p class="danger"><strong>Проклятая охота:</strong><br>• Уйти, не сказав 'Goodbye'.<br>• Задать вопрос при 0% рассудка.<br>• Сказать 'Hide and Seek'.</p>
             </div>`
         }
     },
     {
-        name: { en: "Voodoo Doll", pl: "Lalka Voodoo", ru: "Кукла Вуду" },
+        name: { en: "Voodoo Doll", pl: "Laleczka Voodoo", ru: "Кукла Вуду" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/e/e2/Voodoo_Doll_New.jpg/revision/latest?cb=20211210173413",
-        icon: "🧸",
+        icon: "🧶",
         description: {
             en: `
             <div class="cursed-details">
-                <p><strong>Effect:</strong> Push 1-10 pins to force interactions. Pins are random.</p>
+                <p><strong>Effect:</strong> Force the ghost to interact. 10 pins total. One lucky pin triggers a hunt.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Normal Pin</span><span class="value">-5% Sanity</span></div>
-                    <div class="stat-box"><span class="label">Heart Pin</span><span class="value">-10% Sanity</span></div>
+                    <div class="stat-box"><span class="label">Sanity Drain</span><span class="value">5% per pin</span></div>
+                    <div class="stat-box"><span class="label">Pins</span><span class="value">10</span></div>
                 </div>
-                <p class="danger"><strong>Hunt Trigger:</strong><br>• Heart Pin pushed (Random or Requested).<br>• Pushing any pin with &#60;5% Sanity.</p>
+                <p class="danger"><strong>Hunt Trigger:</strong><br>• If the heart pin (chest) is pushed.<br>• If you use it at 0% sanity.</p>
             </div>`,
             pl: `
             <div class="cursed-details">
-                <p><strong>Efekt:</strong> Wbijasz szpilki (1-10), aby wymusić interakcje. Szpilki są losowe.</p>
+                <p><strong>Efekt:</strong> Zmusza ducha do interakcji. Ma 10 szpilek. Wybranie szpilki w sercu odpala polowanie.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Zwykła Szpilka</span><span class="value">-5% Sanity</span></div>
-                    <div class="stat-box"><span class="label">Szpilka w Serce</span><span class="value">-10% Sanity</span></div>
+                    <div class="stat-box"><span class="label">Koszt Sanity</span><span class="value">5% / szpilka</span></div>
+                    <div class="stat-box"><span class="label">Szpilki</span><span class="value">10</span></div>
                 </div>
-                <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Wbicie szpilki w serce (losowo lub celowo).<br>• Użycie lalki mając mniej niż 5% sanity.</p>
+                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Jeśli wbita zostanie szpilka w serce.<br>• Użycie przy 0% sanity.</p>
             </div>`,
             ru: `
             <div class="cursed-details">
-                <p><strong>Эффект:</strong> Втыкайте иголки (1-10) для взаимодействия. Случайные иголки.</p>
+                <p><strong>Эффект:</strong> Заставляет призрака взаимодействовать. Всего 10 иголок.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Обычная игла</span><span class="value">-5% Рассудка</span></div>
-                    <div class="stat-box"><span class="label">Сердце</span><span class="value">-10% Рассудка</span></div>
+                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">5% за иглу</span></div>
+                    <div class="stat-box"><span class="label">Иголки</span><span class="value">10</span></div>
                 </div>
-                <p class="danger"><strong>Начало охоты:</strong><br>• Игла в сердце (случайно или нет).<br>• Использование при <5% рассудка.</p>
+                <p class="danger"><strong>Проклятая охота:</strong><br>• Если воткнуть иглу в сердце.<br>• Использование при 0% рассудка.</p>
             </div>`
         }
     },
     {
-        name: { en: "Haunted Mirror", pl: "Nawiedzone Lustro", ru: "Проклятое Зеркало" },
+        name: { en: "Haunted Mirror", pl: "Nawiedzone Lustro", ru: "Проклятое зеркало" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/7/7b/Cursed_Mirror.jpg/revision/latest?cb=20220303041525",
         icon: "🪞",
         description: {
             en: `
             <div class="cursed-details">
-                <p><strong>Effect:</strong> Shows a live view of the Ghost's Room. The room is highlighted with a panning view.</p>
+                <p><strong>Effect:</strong> Shows exactly where the ghost room is. Sanity drains fast while looking.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Usage Cost</span><span class="value">-20% (Instant)</span></div>
-                    <div class="stat-box"><span class="label">Drain Rate</span><span class="value">-7.5% / sec</span></div>
+                    <div class="stat-box"><span class="label">Sanity Drain</span><span class="value">7.5% / sec</span></div>
+                    <div class="stat-box"><span class="label">Min Drain</span><span class="value">20%</span></div>
                 </div>
-                <p class="danger"><strong>Hunt Trigger:</strong><br>• Reaching 0% Sanity while looking.</p>
+                <p class="danger"><strong>Hunt Trigger:</strong><br>• If your sanity hits zero while looking.<br>• Mirror shatters.</p>
             </div>`,
             pl: `
             <div class="cursed-details">
-                <p><strong>Efekt:</strong> Pokazuje podgląd ulubionego pokoju ducha.</p>
+                <p><strong>Efekt:</strong> Pokazuje dokładną lokalizację pokoju ducha. Błyskawicznie zabiera sanity.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Aktywacja</span><span class="value">-20% (Natychmiast)</span></div>
-                    <div class="stat-box"><span class="label">Utrata Sanity</span><span class="value">-7.5% / sek</span></div>
+                    <div class="stat-box"><span class="label">Koszt Sanity</span><span class="value">7.5% / sek</span></div>
+                    <div class="stat-box"><span class="label">Min. koszt</span><span class="value">20%</span></div>
                 </div>
-                <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Spadek sanity do 0% podczas patrzenia (lustro pęka).</p>
+                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Gdy Sanity spadnie do 0 podczas patrzenia.<br>• Lustro pęka.</p>
             </div>`,
             ru: `
             <div class="cursed-details">
-                <p><strong>Эффект:</strong> Показывает комнату призрака в реальном времени.</p>
+                <p><strong>Эффект:</strong> Показывает точно, где находится комната призрака. Быстро ест рассудок.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Активация</span><span class="value">-20% (Сразу)</span></div>
-                    <div class="stat-box"><span class="label">Трата</span><span class="value">-7.5% / сек</span></div>
+                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">7.5% / сек</span></div>
+                    <div class="stat-box"><span class="label">Мин. расход</span><span class="value">20%</span></div>
                 </div>
-                <p class="danger"><strong>Начало охоты:</strong><br>• Если рассудок упадет до 0% во время просмотра.</p>
+                <p class="danger"><strong>Проклятая охота:</strong><br>• Если рассудок упадет до 0 при использовании.<br>• Зеркало разбивается.</p>
             </div>`
         }
     },
     {
-        name: { en: "Summoning Circle", pl: "Krąg Przywołań", ru: "Круг Призыва" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/d/de/Sc_new1.jpg/revision/latest/scale-to-width-down/1000?cb=20231230161505",
-        icon: "🕯️",
-        description: {
-            en: `
-            <div class="cursed-details">
-                <p><strong>Effect:</strong> Light 5 candles to SUMMON the ghost. It stays trapped for 5 seconds (Perfect for Photo).</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Cost Per Candle</span><span class="value">-16% Sanity</span></div>
-                    <div class="stat-box"><span class="label">Total Cost</span><span class="value">-80% Sanity</span></div>
-                </div>
-                <p class="danger"><strong>Hunt Trigger:</strong><br>• IMMEDIATELY after the 5s trap ends.<br>• If you light the last candle with &#60;16% sanity.</p>
-            </div>`,
-            pl: `
-            <div class="cursed-details">
-                <p><strong>Efekt:</strong> Zapal 5 świec, aby PRZYWOŁAĆ ducha. Jest uwięziony przez 5 sekund (Chwila na zdjęcie).</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Koszt Świecy</span><span class="value">-16% Sanity</span></div>
-                    <div class="stat-box"><span class="label">Koszt Całkowity</span><span class="value">-80% Sanity</span></div>
-                </div>
-                <p class="danger"><strong>Ryzyko Polowania:</strong><br>• NATYCHMIAST po upływie 5 sekund.<br>• Zapalenie ostatniej świecy mając mniej niż 16% sanity = przywołanie bez uwięzienia (instant hunt).</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> Зажгите 5 свечей для ПРИЗЫВА. Призрак заперт на 5 секунд (время для фото).</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Цена свечи</span><span class="value">-16% Рассудка</span></div>
-                    <div class="stat-box"><span class="label">Всего</span><span class="value">-80% Рассудка</span></div>
-                </div>
-                <p class="danger"><strong>Начало охоты:</strong><br>• СРАЗУ после 5 секунд ловушки.<br>• Если зажечь последнюю свечу с <16% рассудка.</p>
-            </div>`
-        }
-    },
-    {
-        name: { en: "Tarot Cards", pl: "Karty Tarot", ru: "Карты Таро" },
+        name: { en: "Tarot Cards", pl: "Karty Tarota", ru: "Карты Таро" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/a/a7/Tarot_Cards.png/revision/latest?cb=20211210181436",
         icon: "🃏",
         description: {
             en: `
             <div class="cursed-details">
-                <p><strong>Effect:</strong> Draw 10 cards. Random effects.</p>
+                <p><strong>Effect:</strong> 10 random cards with unique effects (Healing, Death, Sanity, etc.).</p>
                 <ul class="tarot-list">
-                    <li><span class="t-red">Wheel (Red)</span>: -25% Sanity</li>
-                    <li><span class="t-green">Wheel (Green)</span>: +25% Sanity</li>
-                    <li><span class="t-blue">Tower</span>: Interaction</li>
-                    <li><span class="t-purple">Death</span>: Cursed Hunt</li>
-                    <li><span class="t-white">Moon</span>: 0% Sanity</li>
-                    <li><span class="t-gold">Sun</span>: 100% Sanity</li>
-                    <li><span class="t-cyan">High Priestess</span>: Revive</li>
-                    <li><span class="t-fail">Hanged Man</span>: INSTANT DEATH</li>
+                    <li><span class="t-red">Death</span>: Hunt</li>
+                    <li><span class="t-red">Hanged Man</span>: Death</li>
+                    <li><span class="t-green">Sun</span>: 100% Sanity</li>
+                    <li><span class="t-blue">Moon</span>: 0% Sanity</li>
+                    <li><span class="t-white">Tower</span>: Force Event</li>
+                    <li><span class="t-gold">Hermit</span>: Traps Ghost</li>
                 </ul>
             </div>`,
             pl: `
             <div class="cursed-details">
-                <p><strong>Efekt:</strong> Wyciągnij 10 kart. Losowe efekty.</p>
+                <p><strong>Efekt:</strong> 10 losowych kart z unikalnymi efektami (Leczenie, Śmierć, Sanity).</p>
                 <ul class="tarot-list">
-                    <li><span class="t-red">Wheel (Czerw)</span>: -25% Sanity</li>
-                    <li><span class="t-green">Wheel (Ziel)</span>: +25% Sanity</li>
-                    <li><span class="t-blue">Tower</span>: Interakcja</li>
-                    <li><span class="t-purple">Death</span>: Przeklęte Polowanie</li>
-                    <li><span class="t-white">Moon</span>: 0% Sanity</li>
-                    <li><span class="t-gold">Sun</span>: 100% Sanity</li>
-                    <li><span class="t-cyan">High Priestess</span>: Wskrzeszenie</li>
-                    <li><span class="t-fail">Hanged Man</span>: NATYCHMIASTOWA ŚMIERĆ</li>
+                    <li><span class="t-red">Death</span>: Atak</li>
+                    <li><span class="t-red">Hanged Man</span>: Śmierć</li>
+                    <li><span class="t-green">Sun</span>: 100% Sanity</li>
+                    <li><span class="t-blue">Moon</span>: 0% Sanity</li>
+                    <li><span class="t-white">Tower</span>: Event</li>
+                    <li><span class="t-gold">Hermit</span>: Więzi Ducha</li>
                 </ul>
             </div>`,
             ru: `
             <div class="cursed-details">
-                <p><strong>Эффект:</strong> 10 случайных карт.</p>
+                <p><strong>Эффект:</strong> 10 случайных карт с уникальными эффектами.</p>
                 <ul class="tarot-list">
-                    <li><span class="t-red">Wheel (Красн)</span>: -25% Рассудка</li>
-                    <li><span class="t-green">Wheel (Зел)</span>: +25% Рассудка</li>
-                    <li><span class="t-blue">Tower</span>: Взаимодействие</li>
-                    <li><span class="t-purple">Death</span>: Проклятая Охота</li>
-                    <li><span class="t-white">Moon</span>: 0% Рассудка</li>
-                    <li><span class="t-gold">Sun</span>: 100% Рассудка</li>
-                    <li><span class="t-cyan">High Priestess</span>: Возрождение</li>
-                    <li><span class="t-fail">Hanged Man</span>: МГНОВЕННАЯ СМЕРТЬ</li>
+                    <li><span class="t-red">Death</span>: Охота</li>
+                    <li><span class="t-red">Hanged Man</span>: Смерть</li>
+                    <li><span class="t-green">Sun</span>: 100% рассудка</li>
+                    <li><span class="t-blue">Moon</span>: 0% рассудка</li>
+                    <li><span class="t-white">Tower</span>: Ивент</li>
+                    <li><span class="t-gold">Hermit</span>: Запирает призрака</li>
                 </ul>
             </div>`
         }
     },
     {
-        name: { en: "Monkey Paw", pl: "Małpia Łapa", ru: "Обезьянья Лапа" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/c/cc/Monkey_Paw.png/revision/latest?cb=20230228154004",
-        icon: "🐾",
+        name: { en: "Summoning Circle", pl: "Krąg Przywołań", ru: "Круг призыва" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/d/de/Sc_new1.jpg/revision/latest/scale-to-width-down/1000?cb=20231230161505",
+        icon: "🔯",
         description: {
             en: `
             <div class="cursed-details">
-                <p><strong>Effect:</strong> Grant wishes. Example: "I wish to see the ghost". Wishes vary by multiplier (3-5 wishes).</p>
+                <p><strong>Effect:</strong> Force the ghost to manifest within the circle for 5 seconds. Great for a photo.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">See Ghost</span><span class="value">Event + Hunt</span></div>
-                    <div class="stat-box"><span class="label">Sanity</span><span class="value">Set to 50%</span></div>
+                    <div class="stat-box"><span class="label">Sanity Drain</span><span class="value">16% per candle</span></div>
+                    <div class="stat-box"><span class="label">Total Cost</span><span class="value">80%</span></div>
                 </div>
-                <p class="danger"><strong>Hunt Trigger:</strong><br>• Most wishes trigger a hunt or bad effect.<br>• "I wish to see the ghost" = Instant Hunt.</p>
+                <p class="danger"><strong>Hunt Trigger:</strong><br>• After 5 seconds of manifestation.<br>• Immediately if you have <16% sanity per candle.</p>
             </div>`,
             pl: `
             <div class="cursed-details">
-                <p><strong>Efekt:</strong> Spełnia życzenia. Np. "I wish to see the ghost". Liczba życzeń zależy od mnożnika (3-5).</p>
+                <p><strong>Efekt:</strong> Zmusza ducha do materializacji w kręgu na 5 sekund. Idealne do zdjęcia.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">See Ghost</span><span class="value">Event + Polowanie</span></div>
-                    <div class="stat-box"><span class="label">Sanity Zmiana</span><span class="value">Ustawia na 50%</span></div>
+                    <div class="stat-box"><span class="label">Koszt Sanity</span><span class="value">16% / świeca</span></div>
+                    <div class="stat-box"><span class="label">Koszt Suma</span><span class="value">80%</span></div>
                 </div>
-                <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Większość życzeń ma efekt uboczny.<br>• "I wish to see the ghost" = Natychmiastowe Polowanie.</p>
+                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Po 5 sekundach materializacji.<br>• Natychmiast jeśli masz poniżej 16% sanity przy zapalaniu.</p>
             </div>`,
             ru: `
             <div class="cursed-details">
-                <p><strong>Эффект:</strong> Исполняет желания. "I wish to see the ghost". 3-5 желаний.</p>
+                <p><strong>Эффект:</strong> Заставляет призрака материализоваться в круге на 5 секунд. Супер для фото.</p>
                 <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Увидеть</span><span class="value">Ивент + Охота</span></div>
-                    <div class="stat-box"><span class="label">Рассудок</span><span class="value">Станет 50%</span></div>
+                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">16% за свечу</span></div>
+                    <div class="stat-box"><span class="label">Общий расход</span><span class="value">80%</span></div>
                 </div>
-                <p class="danger"><strong>Начало охоты:</strong><br>• "I wish to see the ghost" = Мгновенная охота.<br>• Желания часто имеют плохие последствия.</p>
+                <p class="danger"><strong>Проклятая охота:</strong><br>• Через 5 секунд после призыва.<br>• Сразу, если у всех <16% рассудка.</p>
+            </div>`
+        }
+    },
+    {
+        name: { en: "Monkey Paw", pl: "Małpia Łapka", ru: "Обезьянья лапа" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/c/cc/Monkey_Paw.png/revision/latest?cb=20230228154004",
+        icon: "🐒",
+        description: {
+            en: `
+            <div class="cursed-details">
+                <p><strong>Effect:</strong> Grants wishes with severe consequences.</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Wishes</span><span class="value">3 - 5</span></div>
+                </div>
+                <p class="danger"><strong>Hunt Trigger:</strong><br>• Wishing for Knowledge (20% chance).<br>• Wishing for 'Anything'.</p>
+            </div>`,
+            pl: `
+            <div class="cursed-details">
+                <p><strong>Efekt:</strong> Spełnia życzenia, ale z surowymi karami.</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Życzenia</span><span class="value">3 - 5</span></div>
+                </div>
+                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Życzenie wiedzy (20% szans).<br>• Życzenie 'Czegokolwiek'.</p>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> Исполняет желания, но с суровыми последствиями.</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Желания</span><span class="value">3 - 5</span></div>
+                </div>
+                <p class="danger"><strong>Проклятая охота:</strong><br>• Желание 'Я хочу знать' (20%).<br>• Желание 'Что угодно'.</p>
             </div>`
         }
     }
 ];
+
+function initCursedItems() {
+    const container = document.querySelector('.cursed-list');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const t = TRANSLATIONS[currentLang];
+
+    CURSED_ITEMS_DATA.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'cursed-item';
+
+        const name = item.name[currentLang] || item.name.en;
+        const desc = item.description[currentLang] || item.description.en;
+
+        card.innerHTML = `
+            <div class="cursed-header">
+                <div class="cursed-icon-wrapper">
+                    <div class="cursed-emoji">${item.icon}</div>
+                    <img src="${item.image}" alt="${name}" class="cursed-img" loading="lazy">
+                </div>
+                <div class="cursed-info">
+                    <h2>${name}</h2>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="cursed-content">
+                ${desc}
+            </div>
+        `;
+
+        const header = card.querySelector('.cursed-header');
+        header.addEventListener('click', () => {
+            const isOpen = card.classList.toggle('open');
+            // We could also add a 'Read More' button inside, but existing CSS uses .open on .cursed-item
+        });
+
+        const img = card.querySelector('.cursed-img');
+        const emoji = card.querySelector('.cursed-emoji');
+
+        img.onload = () => {
+            img.style.opacity = '1';
+            if (emoji) emoji.style.opacity = '0';
+        };
+        img.onerror = () => {
+            img.style.display = 'none';
+            if (emoji) emoji.style.opacity = '1';
+        };
+
+        container.appendChild(card);
+    });
+}

@@ -1,103 +1,61 @@
-// STATE
+/* Phasmophobia Ghost Tracker - Core Logic */
+
+// State
+let currentLang = 'en';
 let selectedEvidences = [];
 let excludedEvidences = [];
-let currentMode = 3; // 3, 2, 1 (Evidence Count)
-let currentLang = 'en'; // 'en' or 'pl'
+let excludedGhosts = [];
+let currentMode = 3; // 3 evidence by default
 
-// DOM ELEMENTS
-const evidenceGrid = document.getElementById('evidence-grid');
+// DOM Elements
 const ghostGrid = document.getElementById('ghost-grid');
-const resetBtn = document.getElementById('reset-btn');
-const ghostCountSpan = document.getElementById('ghost-count');
+const evidenceGrid = document.getElementById('evidence-grid');
+const ghostCountEl = document.getElementById('ghost-count');
 const modeSelect = document.getElementById('mode-select');
-const langBtns = document.querySelectorAll('.lang-btn');
+const resetBtn = document.getElementById('reset-btn');
 
-// INIT
+// --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("App Initializing...");
-    initLanguage();
+    initTabs();
     initEvidenceButtons();
     initGhostList();
-    initTabs();
-    initCursedItems();
+    initLanguage();
+    updatePossibleEvidences();
 
-    // Listeners
-    resetBtn.addEventListener('click', resetAll);
+    // Mode listener
     modeSelect.addEventListener('change', (e) => {
         currentMode = parseInt(e.target.value);
-        checkGhostMatch(); // Re-check to update filtering
+        checkGhostMatch();
     });
+
+    // Reset listener
+    resetBtn.addEventListener('click', resetAll);
+
+    // Initial check for mobile
+    if ('ontouchstart' in window) {
+        document.body.classList.add('is-mobile');
+    }
 });
 
-/* --- LANGUAGE & LOCALIZATION --- */
-function initLanguage() {
-    langBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Updated active class
-            langBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            // Set Lang
-            currentLang = btn.getAttribute('data-lang');
-            updateLanguage();
-        });
-    });
-    updateLanguage();
-}
-
-function updateLanguage() {
-    if (typeof TRANSLATIONS === 'undefined') {
-        console.error("TRANSLATIONS object missing!");
-        return;
-    }
-    const t = TRANSLATIONS[currentLang];
-
-    // 1. Update Static Text (data-i18n)
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) {
-            el.textContent = t[key];
-        }
-    });
-
-    // 2. Update Evidence Buttons
-    initEvidenceButtons(); // Re-render to update names
-
-    // 3. Update Ghost List (Descriptions)
-    initGhostList();
-    checkGhostMatch(); // Restore filtering state
-
-    // 4. Update Cursed Items
-    initCursedItems();
-
-    // 5. Update Timers Headers (Delegated to timers.js)
-    if (typeof window.updateTimerHeaders === 'function') {
-        window.updateTimerHeaders();
-    }
-}
-
-
-
-/* --- TABS --- */
 function initTabs() {
-    const navBtns = document.querySelectorAll('.nav-btn');
-    const sections = document.querySelectorAll('.tab-content');
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-    navBtns.forEach(btn => {
+    navButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active
-            navBtns.forEach(b => b.classList.remove('active'));
-            sections.forEach(s => s.classList.remove('active'));
+            const tabId = btn.getAttribute('data-tab');
 
-            // Set active
+            navButtons.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(t => t.classList.remove('active'));
+
             btn.classList.add('active');
-            const tabId = `tab-${btn.dataset.tab}`;
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            if (tabId === 'cursed') initCursedItems();
         });
     });
 }
 
-/* --- EVIDENCE LOGIC --- */
 function initEvidenceButtons() {
     evidenceGrid.innerHTML = '';
     const t = TRANSLATIONS[currentLang];
@@ -105,44 +63,54 @@ function initEvidenceButtons() {
     EVIDENCES.forEach(ev => {
         const btn = document.createElement('div');
         btn.className = 'btn-evidence';
-        btn.textContent = t[ev] || ev; // Translate or fallback
-        btn.dataset.ev = ev; // Keep internal ID
+        btn.textContent = t[ev] || ev;
+        btn.dataset.ev = ev;
 
-        // Restore State
-        if (selectedEvidences.includes(ev)) btn.classList.add('selected');
-        if (excludedEvidences.includes(ev)) btn.classList.add('excluded');
-
-        // Click (Left = Select)
+        // LEFT CLICK: Select / Deselect
         btn.addEventListener('click', () => toggleSelection(ev, btn));
 
-        // Right Click (Exclude)
-        btn.addEventListener('contextmenu', (e) => {
+        // RIGHT CLICK: Exclude
+        btn.oncontextmenu = (e) => {
             e.preventDefault();
             toggleExclusion(ev, btn);
-        });
+        };
+
+        // MOBILE LONG PRESS
+        let pressTimer;
+        btn.ontouchstart = () => {
+            pressTimer = setTimeout(() => {
+                toggleExclusion(ev, btn);
+                if (window.navigator.vibrate) window.navigator.vibrate(50);
+            }, 600);
+        };
+        btn.ontouchend = () => clearTimeout(pressTimer);
+        btn.ontouchmove = () => clearTimeout(pressTimer);
+
+        if (selectedEvidences.includes(ev)) btn.classList.add('selected');
+        if (excludedEvidences.includes(ev)) btn.classList.add('excluded');
 
         evidenceGrid.appendChild(btn);
     });
 }
 
 function toggleSelection(ev, btn) {
-    if (excludedEvidences.includes(ev)) {
-        excludedEvidences = excludedEvidences.filter(e => e !== ev);
-        btn.classList.remove('excluded');
-    }
+    if (excludedEvidences.includes(ev)) return; // Cannot select if excluded
 
     if (selectedEvidences.includes(ev)) {
         selectedEvidences = selectedEvidences.filter(e => e !== ev);
         btn.classList.remove('selected');
     } else {
-        selectedEvidences.push(ev);
-        btn.classList.add('selected');
+        // CAP logic: EMF 5 for Mimic exception
+        const max = (ev === "Ghost Orb" && selectedEvidences.length >= currentMode) ? 4 : currentMode;
+        if (selectedEvidences.length < max) {
+            selectedEvidences.push(ev);
+            btn.classList.add('selected');
+        }
     }
     checkGhostMatch();
 }
 
 function toggleExclusion(ev, btn) {
-    // Clear selection if present (logic exists)
     if (selectedEvidences.includes(ev)) {
         selectedEvidences = selectedEvidences.filter(e => e !== ev);
         btn.classList.remove('selected');
@@ -166,256 +134,209 @@ function initGhostList() {
     GHOSTS.forEach(ghost => {
         const card = document.createElement('div');
         card.className = 'ghost-card';
-        card.dataset.name = ghost.name; // For filtering
+        card.dataset.ghost = ghost.name;
 
-        // localized fields
-        const shortDescText = ghost.shortDesc[currentLang];
-        // stats can be valid text or objects. If simple string, display. If obj, pick lang
-        const speedText = (typeof ghost.speed === 'object') ? ghost.speed[currentLang] : ghost.speed;
-        const sanityText = (typeof ghost.huntSanity === 'object') ? ghost.huntSanity[currentLang] : ghost.huntSanity;
-
-        // EVIDENCE BADGES (Translate codes)
-        const evIcons = document.createElement('div');
-        evIcons.className = 'ev-icons';
-        ghost.evidences.forEach(ev => {
-            const badge = document.createElement('span');
-            badge.className = 'ev-badge';
-            badge.textContent = t[`code_${ev}`] || ev.substring(0, 3);
-            evIcons.appendChild(badge);
-        });
-
-        const header = document.createElement('div');
-        header.className = 'card-header';
-
-        const titleRow = document.createElement('div');
-        titleRow.className = 'title-row';
-        const title = document.createElement('h3');
-        title.textContent = ghost.name;
-
-        titleRow.appendChild(title);
-        titleRow.appendChild(evIcons);
-        header.appendChild(titleRow);
-
-        // STATS ROW
-        const statsRow = document.createElement('div');
-        statsRow.className = 'stats-row';
-
-        // Sanity
-        const sanityStat = document.createElement('div');
-        sanityStat.className = 'stat-item';
-        sanityStat.innerHTML = `
-            <span class="stat-icon" title="${t.sanity_threshold}">🧠</span>
-            <span class="stat-value">${sanityText}</span>
-        `;
-
-        // Speed
-        const speedStat = document.createElement('div');
-        speedStat.className = 'stat-item';
-        speedStat.innerHTML = `
-            <span class="stat-icon" title="${t.ghost_speed}">👞</span>
-            <span class="stat-value">${speedText}</span>
-        `;
-
-        statsRow.appendChild(sanityStat);
-        statsRow.appendChild(speedStat);
-        header.appendChild(statsRow);
-
-        // Short Description
-        const shortDesc = document.createElement('p');
-        shortDesc.className = 'ghost-short-desc';
-        shortDesc.textContent = shortDescText;
-        header.appendChild(shortDesc);
-
-        // Long Description (Accordion)
-        const longDescContainer = document.createElement('div');
-        longDescContainer.className = 'long-desc-container';
-        longDescContainer.innerHTML = ghost.longDesc[currentLang]; // Inject HTML
-
-        const readMoreBtn = document.createElement('button');
-        readMoreBtn.className = 'read-more-btn';
-        readMoreBtn.textContent = t.read_more;
-        readMoreBtn.onclick = () => {
-            const isOpen = longDescContainer.classList.toggle('open');
-            readMoreBtn.textContent = isOpen ? t.show_less : t.read_more;
+        // RIGHT CLICK TO EXCLUDE GHOST
+        card.oncontextmenu = (e) => {
+            e.preventDefault();
+            toggleGhostExclusion(ghost.name, card);
         };
 
-        card.appendChild(header);
-        card.appendChild(readMoreBtn);
-        card.appendChild(longDescContainer);
+        // MOBILE LONG PRESS
+        let pressTimer;
+        card.ontouchstart = () => {
+            pressTimer = setTimeout(() => {
+                toggleGhostExclusion(ghost.name, card);
+                if (window.navigator.vibrate) window.navigator.vibrate(50);
+            }, 600);
+        };
+        card.ontouchend = () => clearTimeout(pressTimer);
+        card.ontouchmove = () => clearTimeout(pressTimer);
 
-        // Right Click Manual Exclusion Listener
-        card.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            card.classList.toggle('manually-excluded');
+        const translatedName = t[ghost.name] || ghost.name;
+
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="title-row">
+                    <h3>${translatedName}</h3>
+                    <div class="ev-icons">
+                        ${ghost.evidences.map(ev => `
+                            <span class="ev-badge" title="${ev}">${t["code_" + ev] || ev}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stat-icon" title="${t.sanity_threshold}">🧠</span>
+                        <span class="stat-value">${typeof ghost.huntSanity === 'object' ? ghost.huntSanity[currentLang] || ghost.huntSanity.en : ghost.huntSanity}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon" title="${t.ghost_speed}">🏃</span>
+                        <span class="stat-value">${typeof ghost.speed === 'object' ? ghost.speed[currentLang] || ghost.speed.en : ghost.speed}</span>
+                    </div>
+                </div>
+            </div>
+            <p class="ghost-short-desc">${ghost.shortDesc[currentLang] || ghost.shortDesc.en}</p>
+            
+            <button class="read-more-btn">${t.read_more}</button>
+            <div class="long-desc-container">
+                <div class="long-desc-content">
+                    ${ghost.longDesc[currentLang] || ghost.longDesc.en}
+                </div>
+            </div>
+        `;
+
+        const btn = card.querySelector('.read-more-btn');
+        const container = card.querySelector('.long-desc-container');
+        btn.addEventListener('click', () => {
+            const isOpen = container.classList.toggle('open');
+            btn.textContent = isOpen ? t.show_less : t.read_more;
         });
+
+        if (excludedGhosts.includes(ghost.name)) {
+            card.classList.add('manually-excluded');
+        }
 
         ghostGrid.appendChild(card);
     });
+    checkGhostMatch();
+}
+
+function toggleGhostExclusion(name, card) {
+    if (excludedGhosts.includes(name)) {
+        excludedGhosts = excludedGhosts.filter(g => g !== name);
+    } else {
+        excludedGhosts.push(name);
+    }
+    checkGhostMatch();
 }
 
 function checkGhostMatch() {
-    let possibleCount = 0;
+    let visibleCount = 0;
     const ghostCards = document.querySelectorAll('.ghost-card');
 
     ghostCards.forEach(card => {
-        const ghostName = card.dataset.name;
-        const ghost = GHOSTS.find(g => g.name === ghostName);
+        const name = card.dataset.ghost;
+        const ghost = GHOSTS.find(g => g.name === name);
 
-        let possible = true;
+        let match = true;
 
-        // 1. Must have ALL selected evidences
-        for (let ev of selectedEvidences) {
+        // 1. Must have all selected evidences
+        for (const ev of selectedEvidences) {
             if (!ghost.evidences.includes(ev)) {
-                possible = false;
+                // Special case for Mimic fake orb (Orb is NOT in its set in data, but it has a guaranteed orb)
+                // Actually my data.js for Mimic has 4 evidences: ["Spirit Box", "Freezing Temperatures", "Fingerprints", "Ghost Orb"]
+                // Let me double check data.js
+                if (name === "The Mimic" && ev === "Ghost Orb") continue;
+                match = false;
                 break;
             }
         }
 
-        // 2. Must NOT have ANY excluded evidences
-        if (possible) {
-            for (let ev of excludedEvidences) {
+        // 2. Must not have any excluded evidences
+        if (match) {
+            for (const ev of excludedEvidences) {
                 if (ghost.evidences.includes(ev)) {
-                    possible = false;
+                    match = false;
                     break;
                 }
             }
         }
 
-        // 3. Difficulty Mode Logic (Nightmare/Insanity)
-        // If possible so far, check if we violated "Guaranteed Evidence" logic
-        // 3. Difficulty Mode Logic (Nightmare/Insanity)
-        if (possible && currentMode < 3) {
-            // Rule A: Max Visible Evidence Count
-            // Standard ghosts can only show 'currentMode' amount of evidences.
-            // The Mimic can show 'currentMode' + 1 (Fake Orb).
-            const isMimic = (ghost.name === 'The Mimic');
-            const maxVisible = isMimic ? (currentMode + 1) : currentMode;
-
-            if (selectedEvidences.length > maxVisible) {
-                possible = false;
-            }
-
-            // Rule B: Guaranteed Evidence (if not already ruled out)
-            if (possible && ghost.guaranteed) {
-                const realEvidencesSelected = selectedEvidences.filter(e => e !== 'Ghost Orb').length;
-                if (realEvidencesSelected >= currentMode) {
-                    const hasGuaranteed = selectedEvidences.includes(ghost.guaranteed);
-                    if (!hasGuaranteed) {
-                        possible = false;
-                    }
-                }
-            }
+        // 3. User manually excluded this ghost
+        if (excludedGhosts.includes(name)) {
+            card.classList.add('manually-excluded');
+        } else {
+            card.classList.remove('manually-excluded');
         }
 
-        if (possible) {
+        if (match) {
             card.classList.remove('hidden');
-            possibleCount++;
+            visibleCount++;
         } else {
             card.classList.add('hidden');
         }
     });
 
-    ghostCountSpan.textContent = possibleCount;
-
-    // SMART EVIDENCE FILTERING
-    updatePossibleEvidences(ghostCards);
+    ghostCountEl.textContent = visibleCount;
+    updatePossibleEvidences();
 }
 
-function updatePossibleEvidences(ghostCards) {
-    // 1. Collect all possible evidences from currently visible ghosts
-    const possibleEvidences = new Set();
+function updatePossibleEvidences() {
+    const t = TRANSLATIONS[currentLang];
+    const ghostCards = Array.from(document.querySelectorAll('.ghost-card')).filter(c => !c.classList.contains('hidden') && !c.classList.contains('manually-excluded'));
 
-    ghostCards.forEach(card => {
-        if (!card.classList.contains('hidden') && !card.classList.contains('manually-excluded')) {
-            const ghost = GHOSTS.find(g => g.name === card.dataset.name);
-            ghost.evidences.forEach(ev => possibleEvidences.add(ev));
-        }
+    const possibleGhostData = ghostCards.map(c => GHOSTS.find(g => g.name === c.dataset.ghost));
+    const allPossibleEvs = new Set();
+    possibleGhostData.forEach(g => {
+        g.evidences.forEach(e => allPossibleEvs.add(e));
     });
 
-    // 2. Calculate Counts for Game Mode Logic (CAP LOGIC)
-    const realEvidencesCount = selectedEvidences.filter(e => e !== 'Ghost Orb').length;
-    const maxRealEvidences = currentMode;
-
-    // 3. Update buttons UI
-    document.querySelectorAll('.btn-evidence').forEach(btn => {
+    const evButtons = document.querySelectorAll('.btn-evidence');
+    evButtons.forEach(btn => {
         const ev = btn.dataset.ev;
-        const isSelected = selectedEvidences.includes(ev);
-        const isRealEvidence = (ev !== 'Ghost Orb');
-
-        let shouldDisable = false;
-
-        // Condition A: Mathematically impossible for any remaining ghost
-        if (!possibleEvidences.has(ev)) {
-            shouldDisable = true;
-        }
-
-        // Condition B: Game Mode Cap Reached
-        // (Prevent selecting more than allowed)
-        if (!isSelected) {
-            // If I am a real evidence, and we already have max real evidences selected -> disable me
-            if (isRealEvidence && realEvidencesCount >= maxRealEvidences) {
-                shouldDisable = true;
-            }
-        }
-
-        // Apply State
-        if (shouldDisable && !isSelected) {
-            btn.classList.add('impossible');
-        } else {
+        if (allPossibleEvs.has(ev)) {
             btn.classList.remove('impossible');
+        } else {
+            btn.classList.add('impossible');
         }
     });
+}
+
+// --- LANGUAGE ---
+function initLanguage() {
+    const langBtns = document.querySelectorAll('.lang-btn');
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentLang = btn.dataset.lang;
+            langBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateLanguage();
+        });
+    });
+    updateLanguage();
+}
+
+function updateLanguage() {
+    const t = TRANSLATIONS[currentLang];
+
+    // 1. Update Static Text (data-i18n)
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+            el.textContent = t[key];
+        }
+    });
+
+    // 2. Refresh dynamic parts
+    initEvidenceButtons();
+    initGhostList();
+    if (document.getElementById('tab-cursed').classList.contains('active')) {
+        initCursedItems();
+    }
+
+    // Update Tip based on device
+    const mainTip = document.getElementById('main-tip');
+    if (mainTip) {
+        const isMobile = 'ontouchstart' in window;
+        mainTip.querySelector('span').textContent = isMobile ? t.tip_mobile_controls : t.tip_pc_controls;
+    }
+
+    // Update markers in timers
+    if (typeof initTimelines === 'function') {
+        initTimelines();
+    }
+    if (typeof window.updateTimerHeaders === 'function') {
+        window.updateTimerHeaders();
+    }
 }
 
 function resetAll() {
     selectedEvidences = [];
     excludedEvidences = [];
-
-    // Reset buttons UI
-    document.querySelectorAll('.btn-evidence').forEach(btn => {
-        btn.classList.remove('selected', 'excluded');
+    excludedGhosts = [];
+    document.querySelectorAll('.btn-evidence').forEach(b => {
+        b.classList.remove('selected', 'excluded', 'impossible');
     });
-
-    // Reset exclusions
-    document.querySelectorAll('.ghost-card').forEach(card => card.classList.remove('manually-excluded'));
-
     checkGhostMatch();
-}
-
-/* --- CURSED ITEMS LOGIC --- */
-function initCursedItems() {
-    const list = document.querySelector('.cursed-list');
-    list.innerHTML = '';
-    const t = TRANSLATIONS[currentLang];
-
-    CURSED_ITEMS_DATA.forEach(item => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'cursed-item';
-
-        const nameText = item.name[currentLang];
-        const descText = item.description[currentLang];
-        const iconChar = item.icon || "❓";
-
-        itemEl.innerHTML = `
-            <div class="cursed-header">
-                <div class="cursed-icon-wrapper">
-                    <span class="cursed-emoji">${iconChar}</span>
-                    <img src="${item.image}" alt="${nameText}" class="cursed-img" 
-                         onload="this.classList.add('loaded')" 
-                         onerror="this.style.display='none'">
-                </div>
-                <h3>${nameText}</h3>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="cursed-content">
-                ${descText}
-            </div>
-        `;
-
-        itemEl.querySelector('.cursed-header').addEventListener('click', () => {
-            itemEl.classList.toggle('open');
-        });
-
-        list.appendChild(itemEl);
-    });
 }

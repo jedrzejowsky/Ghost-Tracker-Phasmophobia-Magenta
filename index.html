@@ -40,8 +40,12 @@
                     </select>
                 </div>
 
-                <div class="tip-container">
+                <div class="tip-container" id="main-tip">
                     <span data-i18n="tip_pc_controls">💡 Tip: Right-click to exclude!</span>
+                </div>
+                <div class="tip-container adblock-tip"
+                    style="background: rgba(255, 77, 77, 0.1); border-color: var(--excluded-color);">
+                    <span data-i18n="tip_adblock">⚠️ Site not working? Try disabling AdBlock!</span>
                 </div>
 
                 <div class="evidence-panel">
@@ -89,7 +93,6 @@
                     </div>
                     <div class="timer-controls">
                         <button class="btn-timer start" onclick="toggleTimer('hunt')">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('hunt')">Reset</button>
                     </div>
                 </div>
 
@@ -106,7 +109,6 @@
                     </div>
                     <div class="timer-controls">
                         <button class="btn-timer start" onclick="toggleTimer('cooldown')">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('cooldown')">Reset</button>
                     </div>
                 </div>
 
@@ -123,7 +125,6 @@
                     </div>
                     <div class="timer-controls">
                         <button class="btn-timer start" onclick="toggleTimer('smudge')">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('smudge')">Reset</button>
                     </div>
                 </div>
 
@@ -140,7 +141,6 @@
                     </div>
                     <div class="timer-controls">
                         <button class="btn-timer start" onclick="toggleTimer('paramic')">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('paramic')">Reset</button>
                     </div>
                 </div>
 

@@ -50,10 +50,18 @@ const TRANSLATIONS = {
         "label_cursed": "Cursed Hunt",
         "timeline_total": "Total",
         "label_yokai": "Yokai",
-        "tip_pc_controls": "💡 Tip: Right-click on Evidence or Ghosts to exclude them!",
-        "btn_start": "Start",
-        "btn_stop": "Stop",
-        "btn_reset": "Reset"
+        // --- UI Tips ---
+        tip_pc_controls: "💡 Tip: Right-click to exclude!",
+        tip_mobile_controls: "💡 Tip: Long-press to exclude!",
+        tip_adblock: "⚠️ Site not working? Try disabling AdBlock!",
+
+        // --- Ghost Names ---
+        "Banshee": "Banshee", "Demon": "Demon", "Deogen": "Deogen", "Goryo": "Goryo", "Hantu": "Hantu",
+        "Jinn": "Jinn", "Mare": "Mare", "The Mimic": "The Mimic", "Moroi": "Moroi", "Myling": "Myling",
+        "Obake": "Obake", "Oni": "Oni", "Onryo": "Onryo", "Phantom": "Phantom", "Poltergeist": "Poltergeist",
+        "Raiju": "Raiju", "Revenant": "Revenant", "Shade": "Shade", "Spirit": "Spirit", "Thaye": "Thaye",
+        "The Twins": "The Twins", "Wraith": "Wraith", "Yokai": "Yokai", "Yurei": "Yurei",
+        "Obambo": "Obambo", "Deogen": "Deogen", "Gallu": "Gallu"
     },
     pl: {
         title: "Phasmophobia Helper Lite",
@@ -106,7 +114,19 @@ const TRANSLATIONS = {
         "label_cursed": "Przeklęte",
         "timeline_total": "Razem",
         "label_yokai": "Yokai",
-        "tip_pc_controls": "💡 Podpowiedź: Kliknij Prawym Przyciskiem na Dowód lub Ducha, aby go wykluczyć!",
+        // --- UI Tips ---
+        tip_pc_controls: "💡 Podpowiedź: Prawy przycisk myszy wyklucza!",
+        tip_mobile_controls: "💡 Podpowiedź: Przytrzymaj, aby wykluczyć!",
+        tip_adblock: "⚠️ Strona nie działa? Spróbuj wyłączyć AdBlock!",
+
+        // --- Ghost Names ---
+        "Banshee": "Banshee", "Demon": "Demon", "Deogen": "Deogen", "Goryo": "Goryo", "Hantu": "Hantu",
+        "Jinn": "Dzin", "Mare": "Mara", "The Mimic": "Mimic", "Moroi": "Moroi", "Myling": "Myling",
+        "Obake": "Obake", "Oni": "Oni", "Onryo": "Onryo", "Phantom": "Phantom", "Poltergeist": "Poltergeist",
+        "Raiju": "Raiju", "Revenant": "Revenant", "Shade": "Zjawa", "Spirit": "Spirit", "Thaye": "Thaye",
+        "The Twins": "Bliźniaki", "Wraith": "Wraith", "Yokai": "Yokai", "Yurei": "Yurei",
+        "Obambo": "Obambo", "Deogen": "Deogen", "Gallu": "Gallu",
+
         "btn_start": "Start",
         "btn_stop": "Stop",
         "btn_reset": "Reset"
@@ -162,7 +182,19 @@ const TRANSLATIONS = {
         "label_cursed": "Проклятая",
         "timeline_total": "Всего",
         "label_yokai": "Екай",
-        "tip_pc_controls": "💡 Совет: Нажмите правой кнопкой мыши, чтобы исключить улику или призрака!",
+        // --- UI Tips ---
+        tip_pc_controls: "💡 Совет: ПКМ для исключения!",
+        tip_mobile_controls: "💡 Совет: Удерживайте для исключения!",
+        tip_adblock: "⚠️ Сайт не работает? Попробуйте отключить AdBlock!",
+
+        // --- Ghost Names ---
+        "Banshee": "Банши", "Demon": "Демон", "Deogen": "Деоген", "Goryo": "Горё", "Hantu": "Ханту",
+        "Jinn": "Джинн", "Mare": "Мара", "The Mimic": "Мимик", "Moroi": "Морой", "Myling": "Мюлинг",
+        "Obake": "Обакэ", "Oni": "Они", "Onryo": "Онрё", "Phantom": "Фантом", "Poltergeist": "Полтергейст",
+        "Raiju": "Райдзю", "Revenant": "Ревенант", "Shade": "Тень", "Spirit": "Дух", "Thaye": "Тайэ",
+        "The Twins": "Близнецы", "Wraith": "Мираж", "Yokai": "Ёкай", "Yurei": "Юрэй",
+        "Obambo": "Обамбо", "Deogen": "Деоген", "Gallu": "Галлу",
+
         "btn_start": "Старт",
         "btn_stop": "Стоп",
         "btn_reset": "Сброс"
