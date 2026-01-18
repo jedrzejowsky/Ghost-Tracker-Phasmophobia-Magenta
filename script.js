@@ -70,26 +70,12 @@ function updateLanguage() {
     // 4. Update Cursed Items
     initCursedItems();
 
-    // 5. Update Timers Headers (Manual update since they are inside timer-card)
-    updateTimerHeaders();
-}
-
-function updateTimerHeaders() {
-    if (typeof TRANSLATIONS === 'undefined') return;
-    const t = TRANSLATIONS[currentLang];
-
-    const timerCards = document.querySelectorAll('.timer-card');
-    if (timerCards.length >= 5) {
-        timerCards[0].querySelector('h3').textContent = t.timer_smudge_normal;
-        timerCards[1].querySelector('h3').textContent = t.timer_smudge_spirit;
-        timerCards[2].querySelector('h3').textContent = t.timer_smudge_demon;
-        timerCards[3].querySelector('h3').textContent = t.timer_hunt_cooldown;
-        timerCards[4].querySelector('h3').textContent = t.timer_demon_cooldown;
-
-        document.querySelectorAll('.btn-timer.start').forEach(b => b.textContent = t.btn_start);
-        document.querySelectorAll('.btn-timer.reset').forEach(b => b.textContent = t.btn_reset);
+    // 5. Update Timers Headers (Delegated to timers.js)
+    if (typeof window.updateTimerHeaders === 'function') {
+        window.updateTimerHeaders();
     }
 }
+
 
 
 /* --- TABS --- */
@@ -156,6 +142,7 @@ function toggleSelection(ev, btn) {
 }
 
 function toggleExclusion(ev, btn) {
+    // Clear selection if present (logic exists)
     if (selectedEvidences.includes(ev)) {
         selectedEvidences = selectedEvidences.filter(e => e !== ev);
         btn.classList.remove('selected');
@@ -407,10 +394,16 @@ function initCursedItems() {
 
         const nameText = item.name[currentLang];
         const descText = item.description[currentLang];
+        const iconChar = item.icon || "❓";
 
         itemEl.innerHTML = `
             <div class="cursed-header">
-                <img src="${item.image}" alt="${nameText}" class="cursed-icon" onerror="this.style.display='none'">
+                <div class="cursed-icon-wrapper">
+                    <span class="cursed-emoji">${iconChar}</span>
+                    <img src="${item.image}" alt="${nameText}" class="cursed-img" 
+                         onload="this.classList.add('loaded')" 
+                         onerror="this.style.display='none'">
+                </div>
                 <h3>${nameText}</h3>
                 <span class="arrow">▼</span>
             </div>

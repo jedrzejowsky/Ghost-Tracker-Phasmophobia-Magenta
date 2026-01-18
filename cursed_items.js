@@ -1,7 +1,8 @@
 const CURSED_ITEMS_DATA = [
     {
-        name: { en: "Music Box", pl: "Pozytywka" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/5/52/Music_Box_Render.png",
+        name: { en: "Music Box", pl: "Pozytywka", ru: "Музыкальная шкатулка" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/5/5f/Music_box_display.jpg/revision/latest/scale-to-width-down/1000?cb=20230131144318",
+        icon: "🎶",
         description: {
             en: `
             <div class="cursed-details">
@@ -20,12 +21,22 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Zasięg</span><span class="value">20m (Śpiew) / 5m (Spacer)</span></div>
                 </div>
                 <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Jeśli duch dotknie pozytywki.<br>• Jeśli RZUCISZ pozytywkę podczas grania.<br>• Jeśli melodia zagra do końca (30s).</p>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> Призрак поет, если он в пределах 20м. Призрак выходит и идет к шкатулке (идеально для фото).</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Рассудок</span><span class="value">-2.5% / сек</span></div>
+                    <div class="stat-box"><span class="label">Радиус</span><span class="value">20м (Пение) / 5м (Ходьба)</span></div>
+                </div>
+                <p class="danger"><strong>Начало охоты:</strong><br>• Если призрак коснется шкатулки.<br>• Если БРОСИТЬ играющую шкатулку.<br>• Если мелодия доиграет до конца (30с).</p>
             </div>`
         }
     },
     {
-        name: { en: "Ouija Board", pl: "Tablica Ouija" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/4/42/Ouija_Board_Render.png",
+        name: { en: "Ouija Board", pl: "Tablica Ouija", ru: "Доска Уиджи" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/2/2f/Ouija_Board_New.png/revision/latest?cb=20211210172553",
+        icon: "☠️",
         description: {
             en: `
             <div class="cursed-details">
@@ -44,12 +55,22 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Zwykłe Pytania</span><span class="value">-5% / -20% Sanity</span></div>
                 </div>
                 <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Zadanie pytania mając za mało sanity.<br>• Odejsćie bez powiedzenia "Goodbye".<br>• Pytanie "Hide and Seek" (Chowany).</p>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> Вопросы: "Where are you?" (Комната), "Bone" (Кость), или "Hide and Seek" (Прятки - охота).</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Локация</span><span class="value">-50% Рассудка</span></div>
+                    <div class="stat-box"><span class="label">Обычный вопрос</span><span class="value">-5% / -20% Рассудка</span></div>
+                </div>
+                <p class="danger"><strong>Начало охоты:</strong><br>• Вопрос без достаточного рассудка.<br>• Уход без "Goodbye".<br>• Вопрос "Hide and Seek".</p>
             </div>`
         }
     },
     {
-        name: { en: "Voodoo Doll", pl: "Lalka Voodoo" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/1/18/Voodoo_Doll_Render.png",
+        name: { en: "Voodoo Doll", pl: "Lalka Voodoo", ru: "Кукла Вуду" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/e/e2/Voodoo_Doll_New.jpg/revision/latest?cb=20211210173413",
+        icon: "🧸",
         description: {
             en: `
             <div class="cursed-details">
@@ -68,12 +89,22 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Szpilka w Serce</span><span class="value">-10% Sanity</span></div>
                 </div>
                 <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Wbicie szpilki w serce (losowo lub celowo).<br>• Użycie lalki mając mniej niż 5% sanity.</p>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> Втыкайте иголки (1-10) для взаимодействия. Случайные иголки.</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Обычная игла</span><span class="value">-5% Рассудка</span></div>
+                    <div class="stat-box"><span class="label">Сердце</span><span class="value">-10% Рассудка</span></div>
+                </div>
+                <p class="danger"><strong>Начало охоты:</strong><br>• Игла в сердце (случайно или нет).<br>• Использование при <5% рассудка.</p>
             </div>`
         }
     },
     {
-        name: { en: "Haunted Mirror", pl: "Nawiedzone Lustro" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/2/22/Haunted_Mirror_Render.png",
+        name: { en: "Haunted Mirror", pl: "Nawiedzone Lustro", ru: "Проклятое Зеркало" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/7/7b/Cursed_Mirror.jpg/revision/latest?cb=20220303041525",
+        icon: "🪞",
         description: {
             en: `
             <div class="cursed-details">
@@ -92,12 +123,22 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Utrata Sanity</span><span class="value">-7.5% / sek</span></div>
                 </div>
                 <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Spadek sanity do 0% podczas patrzenia (lustro pęka).</p>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> Показывает комнату призрака в реальном времени.</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Активация</span><span class="value">-20% (Сразу)</span></div>
+                    <div class="stat-box"><span class="label">Трата</span><span class="value">-7.5% / сек</span></div>
+                </div>
+                <p class="danger"><strong>Начало охоты:</strong><br>• Если рассудок упадет до 0% во время просмотра.</p>
             </div>`
         }
     },
     {
-        name: { en: "Summoning Circle", pl: "Krąg Przywołań" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/a/a9/Summoning_Circle_Render.png",
+        name: { en: "Summoning Circle", pl: "Krąg Przywołań", ru: "Круг Призыва" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/d/de/Sc_new1.jpg/revision/latest/scale-to-width-down/1000?cb=20231230161505",
+        icon: "🕯️",
         description: {
             en: `
             <div class="cursed-details">
@@ -116,12 +157,22 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Koszt Całkowity</span><span class="value">-80% Sanity</span></div>
                 </div>
                 <p class="danger"><strong>Ryzyko Polowania:</strong><br>• NATYCHMIAST po upływie 5 sekund.<br>• Zapalenie ostatniej świecy mając mniej niż 16% sanity = przywołanie bez uwięzienia (instant hunt).</p>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> Зажгите 5 свечей для ПРИЗЫВА. Призрак заперт на 5 секунд (время для фото).</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Цена свечи</span><span class="value">-16% Рассудка</span></div>
+                    <div class="stat-box"><span class="label">Всего</span><span class="value">-80% Рассудка</span></div>
+                </div>
+                <p class="danger"><strong>Начало охоты:</strong><br>• СРАЗУ после 5 секунд ловушки.<br>• Если зажечь последнюю свечу с <16% рассудка.</p>
             </div>`
         }
     },
     {
-        name: { en: "Tarot Cards", pl: "Karty Tarot" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/c/c5/Tarot_Cards_Render.png",
+        name: { en: "Tarot Cards", pl: "Karty Tarot", ru: "Карты Таро" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/a/a7/Tarot_Cards.png/revision/latest?cb=20211210181436",
+        icon: "🃏",
         description: {
             en: `
             <div class="cursed-details">
@@ -150,12 +201,27 @@ const CURSED_ITEMS_DATA = [
                     <li><span class="t-cyan">High Priestess</span>: Wskrzeszenie</li>
                     <li><span class="t-fail">Hanged Man</span>: NATYCHMIASTOWA ŚMIERĆ</li>
                 </ul>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> 10 случайных карт.</p>
+                <ul class="tarot-list">
+                    <li><span class="t-red">Wheel (Красн)</span>: -25% Рассудка</li>
+                    <li><span class="t-green">Wheel (Зел)</span>: +25% Рассудка</li>
+                    <li><span class="t-blue">Tower</span>: Взаимодействие</li>
+                    <li><span class="t-purple">Death</span>: Проклятая Охота</li>
+                    <li><span class="t-white">Moon</span>: 0% Рассудка</li>
+                    <li><span class="t-gold">Sun</span>: 100% Рассудка</li>
+                    <li><span class="t-cyan">High Priestess</span>: Возрождение</li>
+                    <li><span class="t-fail">Hanged Man</span>: МГНОВЕННАЯ СМЕРТЬ</li>
+                </ul>
             </div>`
         }
     },
     {
-        name: { en: "Monkey Paw", pl: "Małpia Łapa" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/7/7b/Monkey_Paw_Render.png",
+        name: { en: "Monkey Paw", pl: "Małpia Łapa", ru: "Обезьянья Лапа" },
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/c/cc/Monkey_Paw.png/revision/latest?cb=20230228154004",
+        icon: "🐾",
         description: {
             en: `
             <div class="cursed-details">
@@ -174,6 +240,15 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Sanity Zmiana</span><span class="value">Ustawia na 50%</span></div>
                 </div>
                 <p class="danger"><strong>Ryzyko Polowania:</strong><br>• Większość życzeń ma efekt uboczny.<br>• "I wish to see the ghost" = Natychmiastowe Polowanie.</p>
+            </div>`,
+            ru: `
+            <div class="cursed-details">
+                <p><strong>Эффект:</strong> Исполняет желания. "I wish to see the ghost". 3-5 желаний.</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><span class="label">Увидеть</span><span class="value">Ивент + Охота</span></div>
+                    <div class="stat-box"><span class="label">Рассудок</span><span class="value">Станет 50%</span></div>
+                </div>
+                <p class="danger"><strong>Начало охоты:</strong><br>• "I wish to see the ghost" = Мгновенная охота.<br>• Желания часто имеют плохие последствия.</p>
             </div>`
         }
     }

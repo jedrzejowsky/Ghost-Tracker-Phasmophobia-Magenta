@@ -16,6 +16,7 @@
             <div class="lang-switch">
                 <button class="lang-btn active" data-lang="en">EN</button>
                 <button class="lang-btn" data-lang="pl">PL</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
             </div>
             <h1 data-i18n="title">Phasmophobia Helper Lite</h1>
             <p data-i18n="subtitle">Phasmophobia Helper</p>
@@ -37,6 +38,10 @@
                         <option value="2" data-i18n="mode_2">Nightmare (2 Evidence)</option>
                         <option value="1" data-i18n="mode_1">Insanity (1 Evidence)</option>
                     </select>
+                </div>
+
+                <div class="tip-container">
+                    <span data-i18n="tip_pc_controls">💡 Tip: Right-click to exclude!</span>
                 </div>
 
                 <div class="evidence-panel">
@@ -68,47 +73,77 @@
 
         <!-- TAB: TOOLS -->
         <main id="tab-tools" class="tab-content">
-            <div class="timers-grid">
-                <div class="timer-card">
-                    <h3>Smudge Timer (Normal)</h3>
-                    <div class="timer-display">01:30</div>
+            <div class="timers-list">
+
+                <!-- 1. Hunt Duration -->
+                <div class="timeline-card" id="card-hunt">
+                    <div class="timeline-header">
+                        <h3 data-i18n="timeline_hunt">Hunt Duration</h3>
+                        <div class="timer-display">00:00</div>
+                    </div>
+                    <div class="timeline-track-container">
+                        <div class="timeline-track" id="track-hunt">
+                            <div class="timeline-progress"></div>
+                            <!-- Markers will be injected here -->
+                        </div>
+                    </div>
                     <div class="timer-controls">
-                        <button class="btn-timer start" onclick="startTimer('smudge-normal', 90)">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('smudge-normal', 90)">Reset</button>
+                        <button class="btn-timer start" onclick="toggleTimer('hunt')">Start</button>
+                        <button class="btn-timer reset" onclick="resetTimer('hunt')">Reset</button>
                     </div>
                 </div>
-                <div class="timer-card">
-                    <h3>Smudge Timer (Spirit)</h3>
-                    <div class="timer-display">03:00</div>
+
+                <!-- 2. Hunt Cooldown -->
+                <div class="timeline-card" id="card-cooldown">
+                    <div class="timeline-header">
+                        <h3 data-i18n="timeline_cooldown">Hunt Cooldown</h3>
+                        <div class="timer-display">00:00</div>
+                    </div>
+                    <div class="timeline-track-container">
+                        <div class="timeline-track" id="track-cooldown">
+                            <div class="timeline-progress"></div>
+                        </div>
+                    </div>
                     <div class="timer-controls">
-                        <button class="btn-timer start" onclick="startTimer('smudge-spirit', 180)">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('smudge-spirit', 180)">Reset</button>
+                        <button class="btn-timer start" onclick="toggleTimer('cooldown')">Start</button>
+                        <button class="btn-timer reset" onclick="resetTimer('cooldown')">Reset</button>
                     </div>
                 </div>
-                <div class="timer-card">
-                    <h3>Smudge Timer (Demon)</h3>
-                    <div class="timer-display">01:00</div>
+
+                <!-- 3. Smudge Timer -->
+                <div class="timeline-card" id="card-smudge">
+                    <div class="timeline-header">
+                        <h3 data-i18n="timeline_smudge">Smudge Timer</h3>
+                        <div class="timer-display">00:00</div>
+                    </div>
+                    <div class="timeline-track-container">
+                        <div class="timeline-track" id="track-smudge">
+                            <div class="timeline-progress"></div>
+                        </div>
+                    </div>
                     <div class="timer-controls">
-                        <button class="btn-timer start" onclick="startTimer('smudge-demon', 60)">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('smudge-demon', 60)">Reset</button>
+                        <button class="btn-timer start" onclick="toggleTimer('smudge')">Start</button>
+                        <button class="btn-timer reset" onclick="resetTimer('smudge')">Reset</button>
                     </div>
                 </div>
-                <div class="timer-card">
-                    <h3>Standard Hunt Cooldown</h3>
-                    <div class="timer-display">00:25</div>
+
+                <!-- 4. Parabolic Mic -->
+                <div class="timeline-card" id="card-paramic">
+                    <div class="timeline-header">
+                        <h3 data-i18n="timeline_paramic">Parabolic Mic</h3>
+                        <div class="timer-display">00:00</div>
+                    </div>
+                    <div class="timeline-track-container">
+                        <div class="timeline-track" id="track-paramic">
+                            <div class="timeline-progress"></div>
+                        </div>
+                    </div>
                     <div class="timer-controls">
-                        <button class="btn-timer start" onclick="startTimer('hunt-cooldown', 25)">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('hunt-cooldown', 25)">Reset</button>
+                        <button class="btn-timer start" onclick="toggleTimer('paramic')">Start</button>
+                        <button class="btn-timer reset" onclick="resetTimer('paramic')">Reset</button>
                     </div>
                 </div>
-                <div class="timer-card">
-                    <h3>Demon Hunt Cooldown</h3>
-                    <div class="timer-display">00:20</div>
-                    <div class="timer-controls">
-                        <button class="btn-timer start" onclick="startTimer('demon-cooldown', 20)">Start</button>
-                        <button class="btn-timer reset" onclick="resetTimer('demon-cooldown', 20)">Reset</button>
-                    </div>
-                </div>
+
             </div>
         </main>
     </div>
@@ -116,6 +151,10 @@
     <footer>
         <span data-i18n="footer_ver">v0.15.1.0</span>
         <p>by jedrzejowsky</p>
+        <p class="wiki-credit" style="font-size: 0.8rem; margin-top: 5px; opacity: 0.7;">
+            Data from <a href="https://phasmophobia.fandom.com/wiki/" target="_blank"
+                style="color: inherit; text-decoration: underline;">Phasmophobia Wiki</a>
+        </p>
     </footer>
 
     <script src="data.js"></script>

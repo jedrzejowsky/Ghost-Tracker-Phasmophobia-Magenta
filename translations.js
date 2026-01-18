@@ -36,13 +36,23 @@ const TRANSLATIONS = {
         "code_Freezing Temperatures": "FREEZ",
         "code_D.O.T.S Projector": "DOTS",
 
-        // Timers
-        "timer_smudge_normal": "Smudge Timer (Normal)",
-        "timer_smudge_spirit": "Smudge Timer (Spirit)",
-        "timer_smudge_demon": "Smudge Timer (Demon)",
-        "timer_hunt_cooldown": "Standard Hunt Cooldown",
-        "timer_demon_cooldown": "Demon Hunt Cooldown",
+        // Timers & Timeline
+        "timeline_hunt": "Hunt Duration",
+        "timeline_cooldown": "Hunt Cooldown",
+        "timeline_smudge": "Smudge Timer",
+        "timeline_paramic": "Parabolic Mic",
+
+        "label_standard": "Standard",
+        "label_demon": "Demon",
+        "label_spirit": "Spirit",
+        "label_myling": "Myling",
+        "label_obambo": "Obambo",
+        "label_cursed": "Cursed Hunt",
+        "timeline_total": "Total",
+        "label_yokai": "Yokai",
+        "tip_pc_controls": "💡 Tip: Right-click on Evidence or Ghosts to exclude them!",
         "btn_start": "Start",
+        "btn_stop": "Stop",
         "btn_reset": "Reset"
     },
     pl: {
@@ -62,7 +72,7 @@ const TRANSLATIONS = {
         show_less: "Pokaż Mniej",
         sanity_threshold: "Próg Polowania (Sanity)",
         ghost_speed: "Prędkość Ducha",
-        footer_ver: "v0.15.1.0",
+        footer_ver: "v0.15.2.0",
 
         // Evidences
         "EMF 5": "EMF 5",
@@ -82,13 +92,79 @@ const TRANSLATIONS = {
         "code_Freezing Temperatures": "TEMP",
         "code_D.O.T.S Projector": "DOTS",
 
-        // Timers
-        "timer_smudge_normal": "Kadzidło (Normal)",
-        "timer_smudge_spirit": "Kadzidło (Spirit)",
-        "timer_smudge_demon": "Kadzidło (Demon)",
-        "timer_hunt_cooldown": "Cooldown Polowania",
-        "timer_demon_cooldown": "Demon Cooldown",
+        // Timers & Timeline
+        "timeline_hunt": "Czas Polowania",
+        "timeline_cooldown": "Cooldown Polowania",
+        "timeline_smudge": "Czas Kadzidła",
+        "timeline_paramic": "Mikrofon Paraboliczny",
+
+        "label_standard": "Norma",
+        "label_demon": "Demon",
+        "label_spirit": "Spirit",
+        "label_myling": "Myling",
+        "label_obambo": "Obambo",
+        "label_cursed": "Przeklęte",
+        "timeline_total": "Razem",
+        "label_yokai": "Yokai",
+        "tip_pc_controls": "💡 Podpowiedź: Kliknij Prawym Przyciskiem na Dowód lub Ducha, aby go wykluczyć!",
         "btn_start": "Start",
+        "btn_stop": "Stop",
         "btn_reset": "Reset"
+    },
+    ru: {
+        title: "Phasmophobia Helper Lite",
+        subtitle: "Помощник Фазмофобии",
+        nav_ghosts: "Призраки",
+        nav_cursed: "Проклятые предметы",
+        nav_tools: "Инструменты",
+        mode_label: "Режим игры:",
+        mode_3: "Профессионал/Любитель (3 Улики)",
+        mode_2: "Кошмар (2 Улики)",
+        mode_1: "Безумие (1 Улика)",
+        evidence_header: "Улики",
+        reset_btn: "Сброс",
+        possible_ghosts: "Возможные призраки",
+        read_more: "Подробнее",
+        show_less: "Скрыть",
+        sanity_threshold: "Порог рассудка для охоты",
+        ghost_speed: "Скорость призрака",
+        footer_ver: "v0.15.2.0",
+
+        // Evidences
+        "EMF 5": "ЭМП 5",
+        "Spirit Box": "Радиоприемник",
+        "Fingerprints": "Отпечатки рук",
+        "Ghost Orb": "Призрачный огонек",
+        "Ghost Writing": "Записи в блокноте",
+        "Freezing Temperatures": "Минусовая температура",
+        "D.O.T.S Projector": "Лазерный проектор",
+
+        // Short Codes
+        "code_EMF 5": "ЭМП",
+        "code_Spirit Box": "РАДИО",
+        "code_Fingerprints": "РУКИ",
+        "code_Ghost Orb": "ОГОНЕК",
+        "code_Ghost Writing": "КНИГА",
+        "code_Freezing Temperatures": "МИНУС",
+        "code_D.O.T.S Projector": "ЛАЗЕР",
+
+        // Timers & Timeline
+        "timeline_hunt": "Длительность Охоты",
+        "timeline_cooldown": "Перезарядка Охоты",
+        "timeline_smudge": "Благовоние",
+        "timeline_paramic": "Направленный Микрофон",
+
+        "label_standard": "Норма",
+        "label_demon": "Демон",
+        "label_spirit": "Спирит",
+        "label_myling": "Майлинг",
+        "label_obambo": "Обамбо",
+        "label_cursed": "Проклятая",
+        "timeline_total": "Всего",
+        "label_yokai": "Екай",
+        "tip_pc_controls": "💡 Совет: Нажмите правой кнопкой мыши, чтобы исключить улику или призрака!",
+        "btn_start": "Старт",
+        "btn_stop": "Стоп",
+        "btn_reset": "Сброс"
     }
 };
