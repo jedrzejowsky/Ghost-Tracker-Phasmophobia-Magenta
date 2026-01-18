@@ -142,39 +142,54 @@ const CURSED_ITEMS_DATA = [
         description: {
             en: `
             <div class="cursed-details">
-                <p><strong>Effect:</strong> 10 random cards with unique effects (Healing, Death, Sanity, etc.).</p>
+                <p><strong>Effect:</strong> 10 random cards with unique effects. Drawing all 10 extends future hunts by 20 seconds. Cards burn in different colors.</p>
                 <ul class="tarot-list">
-                    <li><span class="t-red">Death</span>: Hunt</li>
-                    <li><span class="t-red">Hanged Man</span>: Death</li>
-                    <li><span class="t-green">Sun</span>: 100% Sanity</li>
-                    <li><span class="t-blue">Moon</span>: 0% Sanity</li>
-                    <li><span class="t-white">Tower</span>: Force Event</li>
-                    <li><span class="t-gold">Hermit</span>: Traps Ghost</li>
+                    <li><span class="t-red">The Hanged Man</span>: Instant Death (very rare)</li>
+                    <li><span class="t-red">Death</span>: Cursed Hunt (60s)</li>
+                    <li><span class="t-pink">The Devil</span>: Ghost Event</li>
+                    <li><span class="t-green">The Sun</span>: +100% Sanity</li>
+                    <li><span class="t-blue">The Moon</span>: -100% Sanity (0%)</li>
+                    <li><span class="t-blue">The Tower</span>: Interaction + 2x Activity (20s)</li>
+                    <li><span class="t-gold">The Hermit</span>: Traps Ghost (1 min)</li>
+                    <li><span class="t-yellow">The High Priestess</span>: Revives Dead Player</li>
+                    <li><span class="t-white">Wheel of Fortune</span>: ±25% Sanity (random)</li>
+                    <li><span class="t-purple">The Fool</span>: No Effect (always during hunt)</li>
                 </ul>
+                <p class="info"><strong>Tip:</strong> Cards drawn during a hunt always become The Fool. Green burn = good, Red burn = bad.</p>
             </div>`,
             pl: `
             <div class="cursed-details">
-                <p><strong>Efekt:</strong> 10 losowych kart z unikalnymi efektami (Leczenie, Śmierć, Sanity).</p>
+                <p><strong>Efekt:</strong> 10 losowych kart z unikalnymi efektami. Wyciągnięcie wszystkich 10 wydłuża przyszłe polowania o 20 sekund. Karty płoną różnymi kolorami.</p>
                 <ul class="tarot-list">
-                    <li><span class="t-red">Death</span>: Atak</li>
-                    <li><span class="t-red">Hanged Man</span>: Śmierć</li>
-                    <li><span class="t-green">Sun</span>: 100% Sanity</li>
-                    <li><span class="t-blue">Moon</span>: 0% Sanity</li>
-                    <li><span class="t-white">Tower</span>: Event</li>
-                    <li><span class="t-gold">Hermit</span>: Więzi Ducha</li>
+                    <li><span class="t-red">The Hanged Man</span>: Natychmiastowa Śmierć (bardzo rzadka)</li>
+                    <li><span class="t-red">Death</span>: Przeklęte Polowanie (60s)</li>
+                    <li><span class="t-pink">The Devil</span>: Ghost Event</li>
+                    <li><span class="t-green">The Sun</span>: +100% Sanity</li>
+                    <li><span class="t-blue">The Moon</span>: -100% Sanity (0%)</li>
+                    <li><span class="t-blue">The Tower</span>: Interakcja + 2x Aktywność (20s)</li>
+                    <li><span class="t-gold">The Hermit</span>: Więzi Ducha (1 min)</li>
+                    <li><span class="t-yellow">The High Priestess</span>: Wskrzesza Martwego Gracza</li>
+                    <li><span class="t-white">Wheel of Fortune</span>: ±25% Sanity (losowo)</li>
+                    <li><span class="t-purple">The Fool</span>: Brak Efektu (zawsze podczas polowania)</li>
                 </ul>
+                <p class="info"><strong>Wskazówka:</strong> Karty ciągnięte podczas polowania zawsze stają się The Fool. Zielony płomień = dobre, Czerwony = złe.</p>
             </div>`,
             ru: `
             <div class="cursed-details">
-                <p><strong>Эффект:</strong> 10 случайных карт с уникальными эффектами.</p>
+                <p><strong>Эффект:</strong> 10 случайных карт с уникальными эффектами. Вытягивание всех 10 продлевает будущие охоты на 20 секунд. Карты горят разными цветами.</p>
                 <ul class="tarot-list">
-                    <li><span class="t-red">Death</span>: Охота</li>
-                    <li><span class="t-red">Hanged Man</span>: Смерть</li>
-                    <li><span class="t-green">Sun</span>: 100% рассудка</li>
-                    <li><span class="t-blue">Moon</span>: 0% рассудка</li>
-                    <li><span class="t-white">Tower</span>: Ивент</li>
-                    <li><span class="t-gold">Hermit</span>: Запирает призрака</li>
+                    <li><span class="t-red">The Hanged Man</span>: Мгновенная Смерть (очень редко)</li>
+                    <li><span class="t-red">Death</span>: Проклятая Охота (60с)</li>
+                    <li><span class="t-pink">The Devil</span>: Ивент Призрака</li>
+                    <li><span class="t-green">The Sun</span>: +100% рассудка</li>
+                    <li><span class="t-blue">The Moon</span>: -100% рассудка (0%)</li>
+                    <li><span class="t-blue">The Tower</span>: Взаимодействие + 2x Активность (20с)</li>
+                    <li><span class="t-gold">The Hermit</span>: Запирает Призрака (1 мин)</li>
+                    <li><span class="t-yellow">The High Priestess</span>: Воскрешает Мертвого Игрока</li>
+                    <li><span class="t-white">Wheel of Fortune</span>: ±25% рассудка (случайно)</li>
+                    <li><span class="t-purple">The Fool</span>: Нет Эффекта (всегда во время охоты)</li>
                 </ul>
+                <p class="info"><strong>Совет:</strong> Карты, вытянутые во время охоты, всегда становятся The Fool. Зеленый огонь = хорошо, Красный = плохо.</p>
             </div>`
         }
     },
