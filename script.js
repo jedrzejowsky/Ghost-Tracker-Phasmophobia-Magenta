@@ -195,9 +195,10 @@ function initGhostList() {
                 <div class="title-row">
                     <h3>${translatedName}</h3>
                     <div class="ev-icons">
-                        ${ghost.evidences.map(ev => `
-                            <span class="ev-badge" title="${ev}">${t["code_" + ev] || ev}</span>
-                        `).join('')}
+                        ${ghost.evidences.map(ev => {
+            const isGuaranteed = ghost.guaranteed === ev;
+            return `<span class="ev-badge ${isGuaranteed ? 'guaranteed' : ''}" title="${ev}">${t["code_" + ev] || ev}</span>`;
+        }).join('')}
                     </div>
                 </div>
                 <div class="stats-row">
@@ -283,6 +284,16 @@ function checkGhostMatch() {
             card.classList.add('manually-excluded');
         } else {
             card.classList.remove('manually-excluded');
+        }
+
+        // 4. Guaranteed Evidence Check (Nightmare / Insanity)
+        if (match && currentMode < 3 && ghost.guaranteed) {
+            const limit = (name === "The Mimic") ? currentMode + 1 : currentMode;
+            if (selectedEvidences.length >= limit) {
+                if (!selectedEvidences.includes(ghost.guaranteed)) {
+                    match = false;
+                }
+            }
         }
 
         if (match) {
