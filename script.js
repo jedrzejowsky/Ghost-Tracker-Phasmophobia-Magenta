@@ -14,6 +14,7 @@ const langBtns = document.querySelectorAll('.lang-btn');
 
 // INIT
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("App Initializing...");
     initLanguage();
     initEvidenceButtons();
     initGhostList();
@@ -24,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', resetAll);
     modeSelect.addEventListener('change', (e) => {
         currentMode = parseInt(e.target.value);
-        checkGhostMatch();
+        checkGhostMatch(); // Re-check to update filtering
     });
 });
 
@@ -45,6 +46,10 @@ function initLanguage() {
 }
 
 function updateLanguage() {
+    if (typeof TRANSLATIONS === 'undefined') {
+        console.error("TRANSLATIONS object missing!");
+        return;
+    }
     const t = TRANSLATIONS[currentLang];
 
     // 1. Update Static Text (data-i18n)
@@ -66,13 +71,13 @@ function updateLanguage() {
     initCursedItems();
 
     // 5. Update Timers Headers (Manual update since they are inside timer-card)
-    // We can use specific selectors or rebuild
     updateTimerHeaders();
 }
 
 function updateTimerHeaders() {
+    if (typeof TRANSLATIONS === 'undefined') return;
     const t = TRANSLATIONS[currentLang];
-    // This is a bit manual but effective
+
     const timerCards = document.querySelectorAll('.timer-card');
     if (timerCards.length >= 5) {
         timerCards[0].querySelector('h3').textContent = t.timer_smudge_normal;
@@ -269,12 +274,9 @@ function checkGhostMatch() {
         const ghostName = card.dataset.name;
         const ghost = GHOSTS.find(g => g.name === ghostName);
 
-        // Evidence Matching Logic
         let possible = true;
 
         // 1. Must have ALL selected evidences
-        // (Unless Mimic logic: Mimic needs Orbs even if it's not a standard evidence? 
-        //  Actually data.js has Orbs for Mimic. Strict sub-set check works fine.)
         for (let ev of selectedEvidences) {
             if (!ghost.evidences.includes(ev)) {
                 possible = false;
@@ -285,10 +287,6 @@ function checkGhostMatch() {
         // 2. Must NOT have ANY excluded evidences
         if (possible) {
             for (let ev of excludedEvidences) {
-                // Special Case: The Mimic has Orbs as EXTRA evidence. 
-                // If we exclude Orbs, Mimic is technically excluded ONLY IF Mode is not 0/1/2? 
-                // In standard logic: Exclude Orbs -> Exclude Mimic? 
-                // Mimic ALWAYS has Orbs. If you rule out Orbs, you rule out Mimic. Correct.
                 if (ghost.evidences.includes(ev)) {
                     possible = false;
                     break;
@@ -296,35 +294,31 @@ function checkGhostMatch() {
             }
         }
 
-        // 3. Difficulty Mode Logic (Nightmare/Insanity Guaranteed Evidence)
-        if (possible && currentMode < 3 && ghost.guaranteed) {
-            // If we selected evidences, and we are almost full, we must check if we missed the guaranteed one.
-            // But simplified: If we selected an evidence that is NOT the guaranteed one, 
-            // and we have reached the limit of available evidences... logic is complex.
+        // 3. Difficulty Mode Logic (Nightmare/Insanity)
+        // If possible so far, check if we violated "Guaranteed Evidence" logic
+        // 3. Difficulty Mode Logic (Nightmare/Insanity)
+        if (possible && currentMode < 3) {
+            // Rule A: Max Visible Evidence Count
+            // Standard ghosts can only show 'currentMode' amount of evidences.
+            // The Mimic can show 'currentMode' + 1 (Fake Orb).
+            const isMimic = (ghost.name === 'The Mimic');
+            const maxVisible = isMimic ? (currentMode + 1) : currentMode;
 
-            // Simpler check: If I have selected X evidences, and none of them is the guaranteed one,
-            // AND (X == currentMode), then this ghost is impossible because it MUST show its guaranteed one.
-            const selectedCount = selectedEvidences.length;
-
-            // Check if selected evidences include the guaranteed one
-            const hasGuaranteed = selectedEvidences.includes(ghost.guaranteed);
-
-            if (selectedCount === currentMode && !hasGuaranteed) {
-                // We found all evidences allowed in this mode, but none were the guaranteed one.
+            if (selectedEvidences.length > maxVisible) {
                 possible = false;
             }
-        }
 
-        // MIMIC Special Case for Nightmare/Insanity
-        // Mimic always shows Orbs + (Mode Amount - 1)? Or Orbs is extra?
-        // Mimic: 3 Evidences + Orbs (Always).
-        // Nightmare: 2 Evidences + Orbs.
-        // Insanity: 1 Evidence + Orbs.
-        // So Mimic technically shows (Mode + 1) evidences.
-        // If I limit my selection to `currentMode`, Mimic might be valid if I selected Orbs.
-        // Logic handled by user generally (they see Orbs and select it). 
-        // Our filter just checks "Does ghost have this evidence?". Mimic has Orbs in `data.js`.
-        // So `selectedEvidences` check passes.
+            // Rule B: Guaranteed Evidence (if not already ruled out)
+            if (possible && ghost.guaranteed) {
+                const realEvidencesSelected = selectedEvidences.filter(e => e !== 'Ghost Orb').length;
+                if (realEvidencesSelected >= currentMode) {
+                    const hasGuaranteed = selectedEvidences.includes(ghost.guaranteed);
+                    if (!hasGuaranteed) {
+                        possible = false;
+                    }
+                }
+            }
+        }
 
         if (possible) {
             card.classList.remove('hidden');
@@ -351,13 +345,34 @@ function updatePossibleEvidences(ghostCards) {
         }
     });
 
-    // 2. Update buttons UI
+    // 2. Calculate Counts for Game Mode Logic (CAP LOGIC)
+    const realEvidencesCount = selectedEvidences.filter(e => e !== 'Ghost Orb').length;
+    const maxRealEvidences = currentMode;
+
+    // 3. Update buttons UI
     document.querySelectorAll('.btn-evidence').forEach(btn => {
         const ev = btn.dataset.ev;
         const isSelected = selectedEvidences.includes(ev);
+        const isRealEvidence = (ev !== 'Ghost Orb');
 
-        // If evidence is NOT possible AND NOT already selected -> fade it out
-        if (!possibleEvidences.has(ev) && !isSelected) {
+        let shouldDisable = false;
+
+        // Condition A: Mathematically impossible for any remaining ghost
+        if (!possibleEvidences.has(ev)) {
+            shouldDisable = true;
+        }
+
+        // Condition B: Game Mode Cap Reached
+        // (Prevent selecting more than allowed)
+        if (!isSelected) {
+            // If I am a real evidence, and we already have max real evidences selected -> disable me
+            if (isRealEvidence && realEvidencesCount >= maxRealEvidences) {
+                shouldDisable = true;
+            }
+        }
+
+        // Apply State
+        if (shouldDisable && !isSelected) {
             btn.classList.add('impossible');
         } else {
             btn.classList.remove('impossible');

@@ -91,17 +91,19 @@ header p {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--card-border);
     color: var(--text-secondary);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+    width: 40px;
+    height: 30px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
     opacity: 0.7;
     transition: 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
+    font-family: var(--font-main);
 }
 
 .lang-btn:hover {
@@ -112,9 +114,10 @@ header p {
 .lang-btn.active {
     background: var(--accent-glow);
     border-color: var(--accent-color);
+    color: var(--accent-color);
     opacity: 1;
     box-shadow: 0 0 10px var(--accent-glow);
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 /* --- NAVIGATION TABS --- */
