@@ -1,335 +1,413 @@
+// STATE
+let selectedEvidences = [];
+let excludedEvidences = [];
+let currentMode = 3; // 3, 2, 1 (Evidence Count)
+let currentLang = 'en'; // 'en' or 'pl'
+
+// DOM ELEMENTS
+const evidenceGrid = document.getElementById('evidence-grid');
+const ghostGrid = document.getElementById('ghost-grid');
+const resetBtn = document.getElementById('reset-btn');
+const ghostCountSpan = document.getElementById('ghost-count');
+const modeSelect = document.getElementById('mode-select');
+const langBtns = document.querySelectorAll('.lang-btn');
+
+// INIT
 document.addEventListener('DOMContentLoaded', () => {
-    const evidenceGrid = document.getElementById('evidence-grid');
-    const ghostGrid = document.getElementById('ghost-grid');
-    const modeSelect = document.getElementById('mode-select');
-
-    // Tabs
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    // State
-    let selectedEvidences = new Set();
-    let excludedEvidences = new Set();
-    let currentMode = 3;
-
-    // Initialize UI
-    initTabs();
+    initLanguage();
     initEvidenceButtons();
     initGhostList();
+    initTabs();
     initCursedItems();
-    updateGhostList();
 
-    // Tab Logic
-    function initTabs() {
-        navButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = btn.dataset.tab;
-
-                // Active class for buttons
-                navButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                // Active class for content
-                tabContents.forEach(c => c.classList.remove('active'));
-                document.getElementById(`tab-${target}`).classList.add('active');
-            });
-        });
-    }
-
-    // Cursed Items
-    function initCursedItems() {
-        const container = document.querySelector('.cursed-list');
-        if (!container || typeof CURSED_ITEMS === 'undefined') return;
-
-        container.innerHTML = ''; // Clear existing
-
-        CURSED_ITEMS.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'cursed-item';
-            el.innerHTML = `
-                <div class="cursed-header">
-                    <img src="${item.image}" alt="${item.name}" class="cursed-icon">
-                    <h3>${item.name}</h3>
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="cursed-content">
-                    ${item.description}
-                </div>
-            `;
-
-            el.querySelector('.cursed-header').addEventListener('click', () => {
-                el.classList.toggle('open');
-            });
-
-            container.appendChild(el);
-        });
-    }
-
-    // Mode Selector Event
+    // Listeners
+    resetBtn.addEventListener('click', resetAll);
     modeSelect.addEventListener('change', (e) => {
         currentMode = parseInt(e.target.value);
-        updateGhostList();
+        checkGhostMatch();
+    });
+});
+
+/* --- LANGUAGE & LOCALIZATION --- */
+function initLanguage() {
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Updated active class
+            langBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Set Lang
+            currentLang = btn.getAttribute('data-lang');
+            updateLanguage();
+        });
+    });
+    updateLanguage();
+}
+
+function updateLanguage() {
+    const t = TRANSLATIONS[currentLang];
+
+    // 1. Update Static Text (data-i18n)
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+            el.textContent = t[key];
+        }
     });
 
-    function initEvidenceButtons() {
-        evidenceGrid.innerHTML = '';
-        EVIDENCES.forEach(evidence => {
-            const btn = document.createElement('button');
-            btn.className = 'btn-evidence';
-            btn.textContent = evidence;
+    // 2. Update Evidence Buttons
+    initEvidenceButtons(); // Re-render to update names
 
-            // Left click: Toggle Select
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleEvidence(evidence, 'select');
-            });
+    // 3. Update Ghost List (Descriptions)
+    initGhostList();
+    checkGhostMatch(); // Restore filtering state
 
-            // Right click: Toggle Exclude
-            btn.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                toggleEvidence(evidence, 'exclude');
-            });
+    // 4. Update Cursed Items
+    initCursedItems();
 
-            evidenceGrid.appendChild(btn);
+    // 5. Update Timers Headers (Manual update since they are inside timer-card)
+    // We can use specific selectors or rebuild
+    updateTimerHeaders();
+}
+
+function updateTimerHeaders() {
+    const t = TRANSLATIONS[currentLang];
+    // This is a bit manual but effective
+    const timerCards = document.querySelectorAll('.timer-card');
+    if (timerCards.length >= 5) {
+        timerCards[0].querySelector('h3').textContent = t.timer_smudge_normal;
+        timerCards[1].querySelector('h3').textContent = t.timer_smudge_spirit;
+        timerCards[2].querySelector('h3').textContent = t.timer_smudge_demon;
+        timerCards[3].querySelector('h3').textContent = t.timer_hunt_cooldown;
+        timerCards[4].querySelector('h3').textContent = t.timer_demon_cooldown;
+
+        document.querySelectorAll('.btn-timer.start').forEach(b => b.textContent = t.btn_start);
+        document.querySelectorAll('.btn-timer.reset').forEach(b => b.textContent = t.btn_reset);
+    }
+}
+
+
+/* --- TABS --- */
+function initTabs() {
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.tab-content');
+
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active
+            navBtns.forEach(b => b.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+
+            // Set active
+            btn.classList.add('active');
+            const tabId = `tab-${btn.dataset.tab}`;
+            document.getElementById(tabId).classList.add('active');
         });
-    }
+    });
+}
 
-    function initGhostList() {
-        ghostGrid.innerHTML = '';
-        GHOSTS.sort((a, b) => a.name.localeCompare(b.name));
+/* --- EVIDENCE LOGIC --- */
+function initEvidenceButtons() {
+    evidenceGrid.innerHTML = '';
+    const t = TRANSLATIONS[currentLang];
 
-        GHOSTS.forEach(ghost => {
-            const card = document.createElement('div');
-            card.className = 'ghost-card';
-            card.dataset.name = ghost.name;
+    EVIDENCES.forEach(ev => {
+        const btn = document.createElement('div');
+        btn.className = 'btn-evidence';
+        btn.textContent = t[ev] || ev; // Translate or fallback
+        btn.dataset.ev = ev; // Keep internal ID
 
-            // Manual Exclusion (Right Click)
-            card.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                card.classList.toggle('manually-excluded');
-            });
+        // Restore State
+        if (selectedEvidences.includes(ev)) btn.classList.add('selected');
+        if (excludedEvidences.includes(ev)) btn.classList.add('excluded');
 
-            const header = document.createElement('div');
-            header.className = 'card-header';
+        // Click (Left = Select)
+        btn.addEventListener('click', () => toggleSelection(ev, btn));
 
-            const titleRow = document.createElement('div');
-            titleRow.className = 'title-row';
-
-            const title = document.createElement('h3');
-            title.textContent = ghost.name;
-
-            // Minimalist Evidence Icons
-            const evIcons = document.createElement('div');
-            evIcons.className = 'ev-icons';
-            const shortCodes = {
-                "EMF 5": "EMF",
-                "Spirit Box": "BOX",
-                "Fingerprints": "FING",
-                "Ghost Orb": "ORB",
-                "Ghost Writing": "WRIT",
-                "Freezing Temperatures": "FREEZ",
-                "D.O.T.S Projector": "DOTS"
-            };
-
-            ghost.evidences.forEach(ev => {
-                const badge = document.createElement('span');
-                badge.className = 'ev-badge';
-                badge.textContent = shortCodes[ev] || ev;
-                evIcons.appendChild(badge);
-            });
-
-            titleRow.appendChild(title);
-            titleRow.appendChild(evIcons);
-            header.appendChild(titleRow);
-
-            // STATS ROW (🧠 / 👞)
-            const statsRow = document.createElement('div');
-            statsRow.className = 'stats-row';
-
-            // Sanity
-            const sanityStat = document.createElement('div');
-            sanityStat.className = 'stat-item';
-            sanityStat.innerHTML = `
-                <span class="stat-icon" title="Hunt Sanity Threshold">🧠</span>
-                <span class="stat-value">${ghost.huntSanity || '50%'}</span>
-            `;
-
-            // Speed
-            const speedStat = document.createElement('div');
-            speedStat.className = 'stat-item';
-            speedStat.innerHTML = `
-                <span class="stat-icon" title="Ghost Speed">👞</span>
-                <span class="stat-value">${ghost.speed || '1.7 m/s'}</span>
-            `;
-
-            statsRow.appendChild(sanityStat);
-            statsRow.appendChild(speedStat);
-            header.appendChild(statsRow);
-
-            // Short Description
-            const shortDesc = document.createElement('p');
-            shortDesc.className = 'ghost-short-desc';
-            shortDesc.textContent = ghost.shortDesc;
-
-            // Expandable Long Description
-            const readMoreBtn = document.createElement('button');
-            readMoreBtn.className = 'read-more-btn';
-            readMoreBtn.textContent = 'Read More';
-
-            const longDescContainer = document.createElement('div');
-            longDescContainer.className = 'long-desc-container';
-            longDescContainer.innerHTML = ghost.longDesc;
-
-            readMoreBtn.addEventListener('click', () => {
-                const isOpen = longDescContainer.classList.contains('open');
-                longDescContainer.classList.toggle('open');
-                readMoreBtn.textContent = isOpen ? 'Read More' : 'Show Less';
-            });
-
-            card.appendChild(header);
-            card.appendChild(shortDesc);
-            card.appendChild(readMoreBtn);
-            card.appendChild(longDescContainer);
-
-            ghostGrid.appendChild(card);
-        });
-    }
-
-    function toggleEvidence(evidence, action) {
-        if (action === 'select') {
-            if (selectedEvidences.has(evidence)) {
-                selectedEvidences.delete(evidence); // Deselect
-            } else {
-                selectedEvidences.add(evidence);
-                excludedEvidences.delete(evidence); // Cannot be excluded if selected
-            }
-        } else if (action === 'exclude') {
-            if (excludedEvidences.has(evidence)) {
-                excludedEvidences.delete(evidence); // Un-exclude
-            } else {
-                excludedEvidences.add(evidence);
-                selectedEvidences.delete(evidence); // Cannot be selected if excluded
-            }
-        }
-
-        renderButtons();
-        updateGhostList();
-    }
-
-    function renderButtons() {
-        const buttons = evidenceGrid.querySelectorAll('.btn-evidence');
-        buttons.forEach(btn => {
-            const evidence = btn.textContent;
-            btn.classList.remove('selected', 'excluded');
-
-            if (selectedEvidences.has(evidence)) {
-                btn.classList.add('selected');
-            } else if (excludedEvidences.has(evidence)) {
-                btn.classList.add('excluded');
-            }
-        });
-    }
-
-    function updateGhostList() {
-        const cards = ghostGrid.querySelectorAll('.ghost-card');
-        let visibleCount = 0;
-
-        cards.forEach(card => {
-            const ghostName = card.dataset.name;
-            const ghost = GHOSTS.find(g => g.name === ghostName);
-
-            const isMatch = checkGhostMatch(ghost);
-
-            if (isMatch) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-            }
+        // Right Click (Exclude)
+        btn.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            toggleExclusion(ev, btn);
         });
 
-        ghostCountSpan.textContent = visibleCount;
+        evidenceGrid.appendChild(btn);
+    });
+}
+
+function toggleSelection(ev, btn) {
+    if (excludedEvidences.includes(ev)) {
+        excludedEvidences = excludedEvidences.filter(e => e !== ev);
+        btn.classList.remove('excluded');
     }
 
-    function checkGhostMatch(ghost) {
-        // 0 Evidence Mode: Simply don't filter by "missing" evidence, but DO respect exclusions.
-        // However, standard logic handles "does ghost have this?" generally.
-        // If user selects an evidence in 0 evidence mode, they likely mean "I found this".
-        // But in 0 evidence, "ghost has evidence X" is technically true in code, just not visible in game.
-        // So standard logic is fine, BUT we must consider the Mimic special case or guaranteed logic if needed.
-        // Actually, guaranteed logic is key for 1 and 2 evidence modes.
+    if (selectedEvidences.includes(ev)) {
+        selectedEvidences = selectedEvidences.filter(e => e !== ev);
+        btn.classList.remove('selected');
+    } else {
+        selectedEvidences.push(ev);
+        btn.classList.add('selected');
+    }
+    checkGhostMatch();
+}
 
-        // 1. Must have ALL selected evidences (as usual)
-        // Note: In 0 evidence mode, if user selects "EMF 5", all ghosts with EMF 5 should show.
+function toggleExclusion(ev, btn) {
+    if (selectedEvidences.includes(ev)) {
+        selectedEvidences = selectedEvidences.filter(e => e !== ev);
+        btn.classList.remove('selected');
+    }
+
+    if (excludedEvidences.includes(ev)) {
+        excludedEvidences = excludedEvidences.filter(e => e !== ev);
+        btn.classList.remove('excluded');
+    } else {
+        excludedEvidences.push(ev);
+        btn.classList.add('excluded');
+    }
+    checkGhostMatch();
+}
+
+/* --- GHOST LOGIC --- */
+function initGhostList() {
+    ghostGrid.innerHTML = '';
+    const t = TRANSLATIONS[currentLang];
+
+    GHOSTS.forEach(ghost => {
+        const card = document.createElement('div');
+        card.className = 'ghost-card';
+        card.dataset.name = ghost.name; // For filtering
+
+        // localized fields
+        const shortDescText = ghost.shortDesc[currentLang];
+        // stats can be valid text or objects. If simple string, display. If obj, pick lang
+        const speedText = (typeof ghost.speed === 'object') ? ghost.speed[currentLang] : ghost.speed;
+        const sanityText = (typeof ghost.huntSanity === 'object') ? ghost.huntSanity[currentLang] : ghost.huntSanity;
+
+        // EVIDENCE BADGES (Translate codes)
+        const evIcons = document.createElement('div');
+        evIcons.className = 'ev-icons';
+        ghost.evidences.forEach(ev => {
+            const badge = document.createElement('span');
+            badge.className = 'ev-badge';
+            badge.textContent = t[`code_${ev}`] || ev.substring(0, 3);
+            evIcons.appendChild(badge);
+        });
+
+        const header = document.createElement('div');
+        header.className = 'card-header';
+
+        const titleRow = document.createElement('div');
+        titleRow.className = 'title-row';
+        const title = document.createElement('h3');
+        title.textContent = ghost.name;
+
+        titleRow.appendChild(title);
+        titleRow.appendChild(evIcons);
+        header.appendChild(titleRow);
+
+        // STATS ROW
+        const statsRow = document.createElement('div');
+        statsRow.className = 'stats-row';
+
+        // Sanity
+        const sanityStat = document.createElement('div');
+        sanityStat.className = 'stat-item';
+        sanityStat.innerHTML = `
+            <span class="stat-icon" title="${t.sanity_threshold}">🧠</span>
+            <span class="stat-value">${sanityText}</span>
+        `;
+
+        // Speed
+        const speedStat = document.createElement('div');
+        speedStat.className = 'stat-item';
+        speedStat.innerHTML = `
+            <span class="stat-icon" title="${t.ghost_speed}">👞</span>
+            <span class="stat-value">${speedText}</span>
+        `;
+
+        statsRow.appendChild(sanityStat);
+        statsRow.appendChild(speedStat);
+        header.appendChild(statsRow);
+
+        // Short Description
+        const shortDesc = document.createElement('p');
+        shortDesc.className = 'ghost-short-desc';
+        shortDesc.textContent = shortDescText;
+        header.appendChild(shortDesc);
+
+        // Long Description (Accordion)
+        const longDescContainer = document.createElement('div');
+        longDescContainer.className = 'long-desc-container';
+        longDescContainer.innerHTML = ghost.longDesc[currentLang]; // Inject HTML
+
+        const readMoreBtn = document.createElement('button');
+        readMoreBtn.className = 'read-more-btn';
+        readMoreBtn.textContent = t.read_more;
+        readMoreBtn.onclick = () => {
+            const isOpen = longDescContainer.classList.toggle('open');
+            readMoreBtn.textContent = isOpen ? t.show_less : t.read_more;
+        };
+
+        card.appendChild(header);
+        card.appendChild(readMoreBtn);
+        card.appendChild(longDescContainer);
+
+        // Right Click Manual Exclusion Listener
+        card.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            card.classList.toggle('manually-excluded');
+        });
+
+        ghostGrid.appendChild(card);
+    });
+}
+
+function checkGhostMatch() {
+    let possibleCount = 0;
+    const ghostCards = document.querySelectorAll('.ghost-card');
+
+    ghostCards.forEach(card => {
+        const ghostName = card.dataset.name;
+        const ghost = GHOSTS.find(g => g.name === ghostName);
+
+        // Evidence Matching Logic
+        let possible = true;
+
+        // 1. Must have ALL selected evidences
+        // (Unless Mimic logic: Mimic needs Orbs even if it's not a standard evidence? 
+        //  Actually data.js has Orbs for Mimic. Strict sub-set check works fine.)
         for (let ev of selectedEvidences) {
             if (!ghost.evidences.includes(ev)) {
-                return false;
+                possible = false;
+                break;
             }
         }
 
-        // 2. Must NOT have any excluded evidences
-        for (let ev of excludedEvidences) {
-            // Special case: Mimic always has Orbs. If we exclude Orbs, Mimic matches ONLY if we consider Orbs "fake".
-            // Logic: If ghost has evidence X, and we excluded X -> fail.
-            // Exception: Mimic has Orbs in evidences list (hack). If excluded Orbs, Mimic technically has it.
-            // But usually excluding Orbs means "I confirmed no orbs". Mimic HAS ORBS. So excluding Orbs SHOULD kill Mimic.
-            if (ghost.evidences.includes(ev)) {
-                return false;
-            }
-        }
-
-        // 3. Guaranteed Evidence Logic (Nightmare = 2, Insanity = 1)
-        if ((currentMode === 2 || currentMode === 1) && ghost.guaranteed) {
-            // If the ghost has a guaranteed evidence...
-            // And we have ruled it out... (Already handled by step 2)
-
-            // Check if it's POSSIBLE to satisfy the guaranteed evidence requirement.
-            // If the user has found evidences, and NONE of them are the guaranteed one, AND we have reached the evidence limit...
-            // Actually, simply: If valid evidences found so far do NOT include guaranteed, 
-            // AND the number of remaining "slots" is less than 1 (meaning we found all available stats and missed the guaranteed one).
-
-            // Wait. 
-            // Nightmare (2 evidences). 
-            // Goryo (Guaranteed DOTS).
-            // Case A: User found EMF 5. (1 slot used). DOTS is still possible. OK.
-            // Case B: User found EMF 5 + Fingerprints. (2 slots used). DOTS NOT found. Goryo fails.
-
-            // If number of selected evidences == currentMode
-            // AND Selected Evidences does NOT contain ghost.guaranteed
-            // THEN Ghost is impossible.
-
-            // Note: Mimic has 3 evidences + Orbs.
-            // Its guaranteed is "Ghost Orb".
-            // If Mode is 2.
-            // User Founds: Spirit Box + Freezing. (2 evidences).
-            // Does Mimic show?
-            // Mimic always shows Orbs. So technically user sees 3 things.
-            // If user selects Spirit Box + Freezing, they haven't selected Orb.
-            // The guaranteed logic above would kill Mimic.
-            // We need to treat Mimic's 'Ghost Orb' as a special "extra" that doesn't count towards the limit?
-            // Or just exempt Mimic from this specific logic block because it's weird?
-            // Let's exempt Mimic from strict slot logic if it's complicate, OR better:
-            // Mimic's "Guaranteed" is Ghost Orb.
-            // If user selects 2 evidences (non-Orbs), Mimic still exists because functionality it fakes 3 evidences.
-            // The constraint is: "One of the provided ACTUAL evidences must be the guaranteed one".
-            // Mimic is unique. Let's skip Mimic for this specific "Slot" check or handle it carefully.
-
-            if (ghost.name !== "The Mimic") {
-                if (selectedEvidences.size >= currentMode) {
-                    if (!selectedEvidences.has(ghost.guaranteed)) {
-                        return false;
-                    }
+        // 2. Must NOT have ANY excluded evidences
+        if (possible) {
+            for (let ev of excludedEvidences) {
+                // Special Case: The Mimic has Orbs as EXTRA evidence. 
+                // If we exclude Orbs, Mimic is technically excluded ONLY IF Mode is not 0/1/2? 
+                // In standard logic: Exclude Orbs -> Exclude Mimic? 
+                // Mimic ALWAYS has Orbs. If you rule out Orbs, you rule out Mimic. Correct.
+                if (ghost.evidences.includes(ev)) {
+                    possible = false;
+                    break;
                 }
             }
         }
 
-        return true;
-    }
+        // 3. Difficulty Mode Logic (Nightmare/Insanity Guaranteed Evidence)
+        if (possible && currentMode < 3 && ghost.guaranteed) {
+            // If we selected evidences, and we are almost full, we must check if we missed the guaranteed one.
+            // But simplified: If we selected an evidence that is NOT the guaranteed one, 
+            // and we have reached the limit of available evidences... logic is complex.
 
-    resetBtn.addEventListener('click', () => {
-        selectedEvidences.clear();
-        excludedEvidences.clear();
-        renderButtons();
-        updateGhostList();
+            // Simpler check: If I have selected X evidences, and none of them is the guaranteed one,
+            // AND (X == currentMode), then this ghost is impossible because it MUST show its guaranteed one.
+            const selectedCount = selectedEvidences.length;
+
+            // Check if selected evidences include the guaranteed one
+            const hasGuaranteed = selectedEvidences.includes(ghost.guaranteed);
+
+            if (selectedCount === currentMode && !hasGuaranteed) {
+                // We found all evidences allowed in this mode, but none were the guaranteed one.
+                possible = false;
+            }
+        }
+
+        // MIMIC Special Case for Nightmare/Insanity
+        // Mimic always shows Orbs + (Mode Amount - 1)? Or Orbs is extra?
+        // Mimic: 3 Evidences + Orbs (Always).
+        // Nightmare: 2 Evidences + Orbs.
+        // Insanity: 1 Evidence + Orbs.
+        // So Mimic technically shows (Mode + 1) evidences.
+        // If I limit my selection to `currentMode`, Mimic might be valid if I selected Orbs.
+        // Logic handled by user generally (they see Orbs and select it). 
+        // Our filter just checks "Does ghost have this evidence?". Mimic has Orbs in `data.js`.
+        // So `selectedEvidences` check passes.
+
+        if (possible) {
+            card.classList.remove('hidden');
+            possibleCount++;
+        } else {
+            card.classList.add('hidden');
+        }
     });
-});
+
+    ghostCountSpan.textContent = possibleCount;
+
+    // SMART EVIDENCE FILTERING
+    updatePossibleEvidences(ghostCards);
+}
+
+function updatePossibleEvidences(ghostCards) {
+    // 1. Collect all possible evidences from currently visible ghosts
+    const possibleEvidences = new Set();
+
+    ghostCards.forEach(card => {
+        if (!card.classList.contains('hidden') && !card.classList.contains('manually-excluded')) {
+            const ghost = GHOSTS.find(g => g.name === card.dataset.name);
+            ghost.evidences.forEach(ev => possibleEvidences.add(ev));
+        }
+    });
+
+    // 2. Update buttons UI
+    document.querySelectorAll('.btn-evidence').forEach(btn => {
+        const ev = btn.dataset.ev;
+        const isSelected = selectedEvidences.includes(ev);
+
+        // If evidence is NOT possible AND NOT already selected -> fade it out
+        if (!possibleEvidences.has(ev) && !isSelected) {
+            btn.classList.add('impossible');
+        } else {
+            btn.classList.remove('impossible');
+        }
+    });
+}
+
+function resetAll() {
+    selectedEvidences = [];
+    excludedEvidences = [];
+
+    // Reset buttons UI
+    document.querySelectorAll('.btn-evidence').forEach(btn => {
+        btn.classList.remove('selected', 'excluded');
+    });
+
+    // Reset exclusions
+    document.querySelectorAll('.ghost-card').forEach(card => card.classList.remove('manually-excluded'));
+
+    checkGhostMatch();
+}
+
+/* --- CURSED ITEMS LOGIC --- */
+function initCursedItems() {
+    const list = document.querySelector('.cursed-list');
+    list.innerHTML = '';
+    const t = TRANSLATIONS[currentLang];
+
+    CURSED_ITEMS_DATA.forEach(item => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'cursed-item';
+
+        const nameText = item.name[currentLang];
+        const descText = item.description[currentLang];
+
+        itemEl.innerHTML = `
+            <div class="cursed-header">
+                <img src="${item.image}" alt="${nameText}" class="cursed-icon" onerror="this.style.display='none'">
+                <h3>${nameText}</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="cursed-content">
+                ${descText}
+            </div>
+        `;
+
+        itemEl.querySelector('.cursed-header').addEventListener('click', () => {
+            itemEl.classList.toggle('open');
+        });
+
+        list.appendChild(itemEl);
+    });
+}
