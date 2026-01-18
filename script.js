@@ -66,8 +66,12 @@ function initEvidenceButtons() {
         btn.textContent = t[ev] || ev;
         btn.dataset.ev = ev;
 
-        // LEFT CLICK: Select / Deselect
-        btn.addEventListener('click', () => toggleSelection(ev, btn));
+        // CLICK: Select
+        let isLongPress = false;
+        btn.addEventListener('click', (e) => {
+            if (isLongPress) return;
+            toggleSelection(ev, btn);
+        });
 
         // RIGHT CLICK: Exclude
         btn.oncontextmenu = (e) => {
@@ -77,14 +81,27 @@ function initEvidenceButtons() {
 
         // MOBILE LONG PRESS
         let pressTimer;
-        btn.ontouchstart = () => {
+        let startX, startY;
+        btn.ontouchstart = (e) => {
+            isLongPress = false;
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
             pressTimer = setTimeout(() => {
+                isLongPress = true;
                 toggleExclusion(ev, btn);
                 if (window.navigator.vibrate) window.navigator.vibrate(50);
             }, 600);
         };
-        btn.ontouchend = () => clearTimeout(pressTimer);
-        btn.ontouchmove = () => clearTimeout(pressTimer);
+        btn.ontouchend = (e) => {
+            clearTimeout(pressTimer);
+        };
+        btn.ontouchmove = (e) => {
+            const touch = e.touches[0];
+            const moveX = Math.abs(touch.clientX - startX);
+            const moveY = Math.abs(touch.clientY - startY);
+            if (moveX > 10 || moveY > 10) clearTimeout(pressTimer);
+        };
 
         if (selectedEvidences.includes(ev)) btn.classList.add('selected');
         if (excludedEvidences.includes(ev)) btn.classList.add('excluded');
@@ -144,14 +161,32 @@ function initGhostList() {
 
         // MOBILE LONG PRESS
         let pressTimer;
-        card.ontouchstart = () => {
+        let startX, startY;
+        let isLongPress = false;
+        card.ontouchstart = (e) => {
+            isLongPress = false;
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
             pressTimer = setTimeout(() => {
+                isLongPress = true;
                 toggleGhostExclusion(ghost.name, card);
                 if (window.navigator.vibrate) window.navigator.vibrate(50);
             }, 600);
         };
         card.ontouchend = () => clearTimeout(pressTimer);
-        card.ontouchmove = () => clearTimeout(pressTimer);
+        card.ontouchmove = (e) => {
+            const touch = e.touches[0];
+            const moveX = Math.abs(touch.clientX - startX);
+            const moveY = Math.abs(touch.clientY - startY);
+            if (moveX > 10 || moveY > 10) clearTimeout(pressTimer);
+        };
+        card.onclick = (e) => {
+            if (isLongPress) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        };
 
         const translatedName = t[ghost.name] || ghost.name;
 
