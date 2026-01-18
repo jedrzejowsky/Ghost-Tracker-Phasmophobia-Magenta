@@ -1,7 +1,7 @@
 const CURSED_ITEMS_DATA = [
     {
         name: { en: "Music Box", pl: "Pozytywka", ru: "Музыкальная шкатулка" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/5/5f/Music_box_display.jpg/revision/latest?cb=20230131144318",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/5/5f/Music_box_display.jpg",
         icon: "🎶",
         description: {
             en: `
@@ -35,7 +35,7 @@ const CURSED_ITEMS_DATA = [
     },
     {
         name: { en: "Ouija Board", pl: "Tabliczka Ouija", ru: "Доска Уиджи" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/2/2f/Ouija_Board_New.png/revision/latest?cb=20211210172553",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/2/2f/Ouija_Board_New.png",
         icon: "👻",
         description: {
             en: `
@@ -69,7 +69,7 @@ const CURSED_ITEMS_DATA = [
     },
     {
         name: { en: "Voodoo Doll", pl: "Laleczka Voodoo", ru: "Кукла Вуду" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/e/e2/Voodoo_Doll_New.jpg/revision/latest?cb=20211210173413",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/e/e2/Voodoo_Doll_New.jpg",
         icon: "🧶",
         description: {
             en: `
@@ -103,7 +103,7 @@ const CURSED_ITEMS_DATA = [
     },
     {
         name: { en: "Haunted Mirror", pl: "Nawiedzone Lustro", ru: "Проклятое зеркало" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/7/7b/Cursed_Mirror.jpg/revision/latest?cb=20220303041525",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/7/7b/Cursed_Mirror.jpg",
         icon: "🪞",
         description: {
             en: `
@@ -137,7 +137,7 @@ const CURSED_ITEMS_DATA = [
     },
     {
         name: { en: "Tarot Cards", pl: "Karty Tarota", ru: "Карты Таро" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/a/a7/Tarot_Cards.png/revision/latest?cb=20211210181436",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/a/a7/Tarot_Cards.png",
         icon: "🃏",
         description: {
             en: `
@@ -180,7 +180,7 @@ const CURSED_ITEMS_DATA = [
     },
     {
         name: { en: "Summoning Circle", pl: "Krąg Przywołań", ru: "Круг призыва" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/d/de/Sc_new1.jpg/revision/latest/scale-to-width-down/1000?cb=20231230161505",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/d/de/Sc_new1.jpg",
         icon: "🔯",
         description: {
             en: `
@@ -214,7 +214,7 @@ const CURSED_ITEMS_DATA = [
     },
     {
         name: { en: "Monkey Paw", pl: "Małpia Łapka", ru: "Обезьянья лапа" },
-        image: "https://static.wikia.nocookie.net/phasmophobia/images/c/cc/Monkey_Paw.png/revision/latest?cb=20230228154004",
+        image: "https://static.wikia.nocookie.net/phasmophobia/images/c/cc/Monkey_Paw.png",
         icon: "🐒",
         description: {
             en: `
