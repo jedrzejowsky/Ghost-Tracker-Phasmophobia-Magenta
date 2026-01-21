@@ -546,7 +546,7 @@ h2 {
 }
 
 .cursed-item.open .cursed-content {
-    max-height: 500px;
+    max-height: 2400px;
     padding: 20px;
     border-top: 1px solid var(--card-border);
     background: rgba(0, 0, 0, 0.2);
@@ -637,6 +637,52 @@ h2 {
 .t-fail {
     color: #800000;
     font-weight: bold;
+}
+
+/* --- WISH SECTIONS (MONKEY PAW) --- */
+.wish-section {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.wish-section h4 {
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wish-item {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border-left: 2px solid rgba(0, 255, 200, 0.5);
+}
+
+.wish-item:last-child {
+    margin-bottom: 0;
+}
+
+.wish-item p {
+    margin: 0 0 6px 0;
+}
+
+.wish-item p:first-child {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.wish-item p:last-child {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
 
