@@ -384,5 +384,13 @@ function resetAll() {
     document.querySelectorAll('.btn-evidence').forEach(b => {
         b.classList.remove('selected', 'excluded', 'impossible');
     });
+    // Reset read-more/read-less state
+    document.querySelectorAll('.long-desc-container').forEach(container => {
+        container.classList.remove('open');
+    });
+    document.querySelectorAll('.read-more-btn').forEach(btn => {
+        const t = TRANSLATIONS[currentLang];
+        btn.textContent = t.read_more;
+    });
     checkGhostMatch();
 }
