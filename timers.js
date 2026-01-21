@@ -150,6 +150,7 @@ window.toggleTimer = function (id) {
     if (timer.isRunning) {
         // IF RUNNING -> RESET
         clearInterval(timer.interval);
+        timer.interval = null;
         timer.isRunning = false;
         timer.elapsed = 0;
         timer.triggeredMarkers.clear();
@@ -176,12 +177,16 @@ window.toggleTimer = function (id) {
             if (timer.elapsed >= config.maxScale) {
                 timer.elapsed = config.maxScale;
                 clearInterval(timer.interval);
+                timer.interval = null;
                 timer.isRunning = false;
+                timer.elapsed = 0;
+                timer.triggeredMarkers.clear();
                 btn.textContent = t.btn_start;
                 btn.classList.remove('active');
+                updateUI(id);
+            } else {
+                updateUI(id);
             }
-
-            updateUI(id);
         }, 100);
     }
 }
@@ -195,6 +200,7 @@ window.resetTimer = function (id) {
     // Stop logic
     if (timer.isRunning) {
         clearInterval(timer.interval);
+        timer.interval = null;
         timer.isRunning = false;
         btn.textContent = t.btn_start;
         btn.classList.remove('active');
