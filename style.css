@@ -549,7 +549,7 @@ display: inline-flex;
 }
 
 .cursed-item.open .cursed-content {
-    max-height: 2400px;
+    max-height: 3400px;
     padding: 20px;
     border-top: 1px solid var(--card-border);
     background: rgba(0, 0, 0, 0.2);
