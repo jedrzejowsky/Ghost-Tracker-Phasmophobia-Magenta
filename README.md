@@ -2,7 +2,7 @@
 
 **Ghost Tracker** - Lightweight, modern tool to identify Phasmophobia ghosts. Featuring real-time filtering, accurate timelines, and interactive toolsets.
 
-**Fully offline • Mobile-friendly • Multilingual (EN/PL/RU)**
+**Fully offline • Mobile-friendly • Multilingual (EN/PL)**
 
 ## ✨ Features
 

@@ -1,6 +1,6 @@
 const CURSED_ITEMS_DATA = [
     {
-        name: { en: "Music Box", pl: "Pozytywka", ru: "Музыкальная шкатулка" },
+        name: { en: "Music Box", pl: "Pozytywka" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/5/5f/Music_box_display.jpg",
         icon: "🎶",
         description: {
@@ -77,25 +77,12 @@ const CURSED_ITEMS_DATA = [
                         <p>Użycie przy zerowym sanity powoduje natychmiast polowanie.</p>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-                <p><strong>Mechanika:</strong> Jeśli duch jest bliżej niż 5m, zmaterializuje się i zacznie iść w stronę pozytywki. Jeśli jej dotknie, odpala <strong>Przeklęte Polowanie</strong>.</p>
-                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Duch dotknie pozytywki lub gracza.<br>• Gra przez pełne 30 sekund.<br>• Rzucenie grającej pozytywki (położenie klawiszem 'F' jest bezpieczne).<br>• Użycie przy 0% sanity.</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> При активации призрак подпевает в радиусе 20м. Можно поставить, чтобы призрак материализовался и пошел к ней.</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">2.5% / сек</span></div>
-                    <div class="stat-box"><span class="label">Радиус</span><span class="value">20м (песня) / 5м (ходьба)</span></div>
-                </div>
-                <p class="danger"><strong>Проклятая охота:</strong><br>• Если призрак коснется шкатулки.<br>• Если БРОСИТЬ играющую шкатулку.<br>• По окончании мелодии (30с).</p>
-=======
->>>>>>> Stashed changes
+
             </div>`
         }
     },
     {
-        name: { en: "Ouija Board", pl: "Tabliczka Ouija", ru: "Доска Уиджи" },
+        name: { en: "Ouija Board", pl: "Tabliczka Ouija" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/2/2f/Ouija_Board_New.png",
         icon: "👻",
         description: {
@@ -155,19 +142,6 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Koszt Sanity</span><span class="value">5% - 50%</span></div>
                     <div class="stat-box"><span class="label">Odpowiedź</span><span class="value">100% Gwarantowana</span></div>
                 </div>
-<<<<<<< Updated upstream
-                <p><strong>Użycie:</strong> Kliknij PPM by aktywować. Musisz <strong>ZAWSZE</strong> pożegnać się ("Goodbye"), inaczej tablica pęknie i wywoła atak.</p>
-                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Odejście bez "Goodbye".<br>• Brak wymaganego sanity (Tablica pęka).<br>• Powiedzenie "Hide and Seek" (5s na ucieczkę).<br>• Pytanie o "Knock Knock".</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> Задавайте вопросы (локация, кость, возраст) ценой рассудка. Нужно сказать 'Goodbye', чтобы выключить.</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">5% - 50%</span></div>
-                    <div class="stat-box"><span class="label">Шанс ответа</span><span class="value">100%</span></div>
-                </div>
-                <p class="danger"><strong>Проклятая охота:</strong><br>• Уйти, не сказав 'Goodbye'.<br>• Задать вопрос при 0% рассудка.<br>• Сказать 'Hide and Seek'.</p>
-=======
 
                 <div class="wish-section" style="border-left: 3px solid #87ceeb;">
                     <h4>⚙️ Użycie</h4>
@@ -209,12 +183,11 @@ const CURSED_ITEMS_DATA = [
                         <p>Gra w tę grę z tablicą uruchamia natychmiastowe polowanie.</p>
                     </div>
                 </div>
->>>>>>> Stashed changes
             </div>`
         }
     },
     {
-        name: { en: "Voodoo Doll", pl: "Laleczka Voodoo", ru: "Кукла Вуду" },
+        name: { en: "Voodoo Doll", pl: "Laleczka Voodoo" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/e/e2/Voodoo_Doll_New.jpg",
         icon: "🧶",
         description: {
@@ -291,25 +264,11 @@ const CURSED_ITEMS_DATA = [
                         <p>Użycie mając mniej niż 5% sanity powoduje że WSZYSTKIE szpilki wbijają się naraz!</p>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-                <p><strong>Mechanika:</strong> Zwykłe szpilki dają interakcje. Szpilka w sercu daje manifestację, ale natychmiast odpala <strong>Przeklęte Polowanie</strong>.</p>
-                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Szpilka w sercu (klatka piersiowa).<br>• Użycie mając <5% sanity (wszystkie szpilki wbijają się naraz).<br>• Każda szpilka ma ~9% szans na bycie "sercem".</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> Заставляет призрака взаимодействовать. Всего 10 иголок.</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">5% за иглу</span></div>
-                    <div class="stat-box"><span class="label">Иголки</span><span class="value">10</span></div>
-                </div>
-                <p class="danger"><strong>Проклятая охота:</strong><br>• Если воткнуть иглу в сердце.<br>• Использование при 0% рассудка.</p>
-=======
->>>>>>> Stashed changes
             </div>`
         }
     },
     {
-        name: { en: "Haunted Mirror", pl: "Nawiedzone Lustro", ru: "Проклятое зеркало" },
+        name: { en: "Haunted Mirror", pl: "Nawiedzone Lustro" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/7/7b/Cursed_Mirror.jpg",
         icon: "🪞",
         description: {
@@ -386,25 +345,11 @@ const CURSED_ITEMS_DATA = [
                         <p>Polowanie zaczyna się bezpośrednio z pozycji ducha.</p>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-                <p><strong>Strategia:</strong> Rzuć szybkie spojrzenie, aby rozpoznać meble/ściany i od razu przestań. Sanity spada bardzo szybko.</p>
-                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Spadek sanity do 0% podczas sesji.<br>• Szkło pęka i zaczyna się atak z pokoju ducha.</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> Показывает точно, где находится комната призрака. Быстро ест рассудок.</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">7.5% / сек</span></div>
-                    <div class="stat-box"><span class="label">Мин. расход</span><span class="value">20%</span></div>
-                </div>
-                <p class="danger"><strong>Проклятая охота:</strong><br>• Если рассудок упадет до 0 при использовании.<br>• Зеркало разбивается.</p>
-=======
->>>>>>> Stashed changes
             </div>`
         }
     },
     {
-        name: { en: "Tarot Cards", pl: "Karty Tarota", ru: "Карты Таро" },
+        name: { en: "Tarot Cards", pl: "Karty Tarota" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/a/a7/Tarot_Cards.png",
         icon: "🃏",
         description: {
@@ -531,28 +476,12 @@ const CURSED_ITEMS_DATA = [
                 </div>
                 
                 <p class="info"><strong>Wskazówka:</strong> Karty ciągnięte podczas polowania zawsze stają się The Fool. Zielony płomień = dobre, Czerwony = złe.</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> 10 случайных карт с уникальными эффектами. Вытягивание всех 10 продлевает будущие охоты на 20 секунд. Карты горят разными цветами.</p>
-                <ul class="tarot-list">
-                    <li><span class="t-red">The Hanged Man</span>: Мгновенная Смерть (очень редко)</li>
-                    <li><span class="t-red">Death</span>: Проклятая Охота (60с)</li>
-                    <li><span class="t-pink">The Devil</span>: Ивент Призрака</li>
-                    <li><span class="t-green">The Sun</span>: +100% рассудка</li>
-                    <li><span class="t-blue">The Moon</span>: -100% рассудка (0%)</li>
-                    <li><span class="t-blue">The Tower</span>: Взаимодействие + 2x Активность (20с)</li>
-                    <li><span class="t-gold">The Hermit</span>: Запирает Призрака (1 мин)</li>
-                    <li><span class="t-yellow">The High Priestess</span>: Воскрешает Мертвого Игрока</li>
-                    <li><span class="t-white">Wheel of Fortune</span>: ±25% рассудка (случайно)</li>
-                    <li><span class="t-purple">The Fool</span>: Нет Эффекта (всегда во время охоты)</li>
-                </ul>
-                <p class="info"><strong>Совет:</strong> Карты, вытянутые во время охоты, всегда становятся The Fool. Зеленый огонь = хорошо, Красный = плохо.</p>
             </div>`
+
         }
     },
     {
-        name: { en: "Summoning Circle", pl: "Krąg Przywołań", ru: "Круг призыва" },
+        name: { en: "Summoning Circle", pl: "Krąg Przywołań" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/d/de/Sc_new1.jpg",
         icon: "🔯",
         description: {
@@ -607,19 +536,6 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Koszt / Świeca</span><span class="value">16% Sanity</span></div>
                     <div class="stat-box"><span class="label">Koszt Suma</span><span class="value">80% Suma</span></div>
                 </div>
-<<<<<<< Updated upstream
-                <p><strong>Użycie:</strong> Zapal świece zapalniczką. Po manifestacji atak zaczyna się z <strong>0s czasem przygotowania</strong>!</p>
-                <p class="danger"><strong>Wywołuje Polowanie:</strong><br>• Pełne zapalenie kręgu (po 5s).<br>• Zbyt niskie sanity, by zapalić świecę (natychmiastowy atak).</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> Заставляет призрака материализоваться в круге на 5 секунд. Супер для фото.</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Расход рассудка</span><span class="value">16% за свечу</span></div>
-                    <div class="stat-box"><span class="label">Общий расход</span><span class="value">80%</span></div>
-                </div>
-                <p class="danger"><strong>Проклятая охота:</strong><br>• Через 5 секунд после призыва.<br>• Сразу, если у всех <16% рассудка.</p>
-=======
                 
                 <div class="wish-section" style="border-left: 3px solid #87ceeb;">
                     <h4>⚙️ Jak Działa</h4>
@@ -656,12 +572,12 @@ const CURSED_ITEMS_DATA = [
                         <p>Próba zapalenia świecy przy zbyt niskim sanity rozpoczyna polowanie natychmiast.</p>
                     </div>
                 </div>
->>>>>>> Stashed changes
             </div>`
+
         }
     },
     {
-        name: { en: "Monkey Paw", pl: "Małpia Łapka", ru: "Обезьянья лапа" },
+        name: { en: "Monkey Paw", pl: "Małpia Łapka" },
         image: "https://static.wikia.nocookie.net/phasmophobia/images/c/cc/Monkey_Paw.png",
         icon: "🐒",
         description: {
@@ -744,18 +660,6 @@ const CURSED_ITEMS_DATA = [
                     <div class="stat-box"><span class="label">Dostępne Życzenia</span><span class="value">3 - 5 (zależnie od mnożnika)</span></div>
                     <div class="stat-box"><span class="label">Mnożnik 0x-1x</span><span class="value">5 życzeń</span></div>
                 </div>
-<<<<<<< Updated upstream
-                <p><strong>Główne Życzenia:</strong><br>• <strong>'Chcę wiedzy'</strong>: Usuwa dowody, ale oślepia/ogłusza Cię.<br>• <strong>'Chcę sanity'</strong>: Daje 50%, ale przyspiesza utratę.<br>• <strong>'Chcę zobaczyć ducha'</strong>: Event, po czym oślepisz.</p>
-                <p class="danger"><strong>Kary:</strong> Każde życzenie ma stały negatywny efekt (gorsza wizja, dłuższy atak, brak światła itp).</p>
-            </div>`,
-            ru: `
-            <div class="cursed-details">
-                <p><strong>Эффект:</strong> Исполняет желания, но с суровыми последствиями.</p>
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="label">Желания</span><span class="value">3 - 5</span></div>
-                </div>
-                <p class="danger"><strong>Проклятая охота:</strong><br>• Желание 'Я хочу знать' (20%).<br>• Желание 'Что угодно'.</p>
-=======
                 <div class="stats-grid">
                     <div class="stat-box"><span class="label">Mnożnik 1.01x-2x</span><span class="value">4 życzenia</span></div>
                     <div class="stat-box"><span class="label">Mnożnik 2.01x+</span><span class="value">3 życzenia</span></div>
@@ -820,7 +724,6 @@ const CURSED_ITEMS_DATA = [
                 </div>
 
                 <p class="danger"><strong>⚠️ Ważne:</strong> Każde życzenie dostępne raz na kontrakt. Tagi życzeń można znaleźć rozrzucone w Sunny Meadows (opcjonalnie). Efekty kumulują się przez cały kontrakt.</p>
->>>>>>> Stashed changes
             </div>`
         }
     }
