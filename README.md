@@ -30,5 +30,3 @@
 - No external dependencies
 
 ---
-*Created by jedrzejowsky*
-
