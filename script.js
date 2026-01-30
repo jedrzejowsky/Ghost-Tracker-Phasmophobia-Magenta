@@ -6,6 +6,54 @@ let selectedEvidences = [];
 let excludedEvidences = [];
 let excludedGhosts = [];
 let currentMode = 3; // 3 evidence by default
+// Constants
+const LONG_PRESS_MS = 600;
+const MOVE_THRESHOLD = 10;
+const DEFAULT_MODE = 3;
+/**
+ * Utility to add a long‑press handler for touch devices.
+ * @param {HTMLElement} el - Element to attach the handler to.
+ * @param {Function} callback - Function to call after a long press.
+ */
+function addLongPressHandler(el, callback) {
+    let pressTimer, startX, startY, isLongPress = false;
+
+    el.ontouchstart = e => {
+        isLongPress = false;
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        pressTimer = setTimeout(() => {
+            isLongPress = true;
+            callback();
+            if (window.navigator.vibrate) window.navigator.vibrate(50);
+        }, LONG_PRESS_MS);
+    };
+    el.ontouchend = () => clearTimeout(pressTimer);
+    el.ontouchmove = e => {
+        const touch = e.touches[0];
+        const moveX = Math.abs(touch.clientX - startX);
+        const moveY = Math.abs(touch.clientY - startY);
+        if (moveX > MOVE_THRESHOLD || moveY > MOVE_THRESHOLD) clearTimeout(pressTimer);
+    };
+    el.onclick = e => {
+        if (isLongPress) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    };
+}
+/**
+ * Determines if a particular evidence is considered present for a ghost.
+ * Handles special cases such as the Mimic’s fake Ghost Orb.
+ * @param {Object} ghost - Ghost data object.
+ * @param {string} ev - Evidence name.
+ * @returns {boolean}
+ */
+function isEvidenceAllowedForGhost(ghost, ev) {
+    if (ghost.name === "The Mimic" && ev === "Ghost Orb") return true;
+    return ghost.evidences.includes(ev);
+}
 
 // DOM Elements
 const ghostGrid = document.getElementById('ghost-grid');
@@ -37,6 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+/**
+ * Initializes tab navigation.
+ */
 function initTabs() {
     const navButtons = document.querySelectorAll('.nav-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -56,6 +107,9 @@ function initTabs() {
     });
 }
 
+/**
+ * Creates evidence selection buttons.
+ */
 function initEvidenceButtons() {
     evidenceGrid.innerHTML = '';
     const t = TRANSLATIONS[currentLang];
@@ -80,28 +134,7 @@ function initEvidenceButtons() {
         };
 
         // MOBILE LONG PRESS
-        let pressTimer;
-        let startX, startY;
-        btn.ontouchstart = (e) => {
-            isLongPress = false;
-            const touch = e.touches[0];
-            startX = touch.clientX;
-            startY = touch.clientY;
-            pressTimer = setTimeout(() => {
-                isLongPress = true;
-                toggleExclusion(ev, btn);
-                if (window.navigator.vibrate) window.navigator.vibrate(50);
-            }, 600);
-        };
-        btn.ontouchend = (e) => {
-            clearTimeout(pressTimer);
-        };
-        btn.ontouchmove = (e) => {
-            const touch = e.touches[0];
-            const moveX = Math.abs(touch.clientX - startX);
-            const moveY = Math.abs(touch.clientY - startY);
-            if (moveX > 10 || moveY > 10) clearTimeout(pressTimer);
-        };
+        addLongPressHandler(btn, () => toggleExclusion(ev, btn));
 
         if (selectedEvidences.includes(ev)) btn.classList.add('selected');
         if (excludedEvidences.includes(ev)) btn.classList.add('excluded');
@@ -110,6 +143,11 @@ function initEvidenceButtons() {
     });
 }
 
+/**
+ * Handles selection of an evidence button.
+ * @param {string} ev - Evidence name.
+ * @param {HTMLElement} btn - Button element.
+ */
 function toggleSelection(ev, btn) {
     if (excludedEvidences.includes(ev)) return; // Cannot select if excluded
 
@@ -127,6 +165,11 @@ function toggleSelection(ev, btn) {
     checkGhostMatch();
 }
 
+/**
+ * Handles exclusion of an evidence button.
+ * @param {string} ev - Evidence name.
+ * @param {HTMLElement} btn - Button element.
+ */
 function toggleExclusion(ev, btn) {
     if (selectedEvidences.includes(ev)) {
         selectedEvidences = selectedEvidences.filter(e => e !== ev);
@@ -144,6 +187,9 @@ function toggleExclusion(ev, btn) {
 }
 
 /* --- GHOST LOGIC --- */
+/**
+ * Builds the list of ghost cards.
+ */
 function initGhostList() {
     ghostGrid.innerHTML = '';
     const t = TRANSLATIONS[currentLang];
@@ -160,27 +206,7 @@ function initGhostList() {
         };
 
         // MOBILE LONG PRESS
-        let pressTimer;
-        let startX, startY;
-        let isLongPress = false;
-        card.ontouchstart = (e) => {
-            isLongPress = false;
-            const touch = e.touches[0];
-            startX = touch.clientX;
-            startY = touch.clientY;
-            pressTimer = setTimeout(() => {
-                isLongPress = true;
-                toggleGhostExclusion(ghost.name, card);
-                if (window.navigator.vibrate) window.navigator.vibrate(50);
-            }, 600);
-        };
-        card.ontouchend = () => clearTimeout(pressTimer);
-        card.ontouchmove = (e) => {
-            const touch = e.touches[0];
-            const moveX = Math.abs(touch.clientX - startX);
-            const moveY = Math.abs(touch.clientY - startY);
-            if (moveX > 10 || moveY > 10) clearTimeout(pressTimer);
-        };
+        addLongPressHandler(card, () => toggleGhostExclusion(ghost.name, card));
         card.onclick = (e) => {
             if (isLongPress) {
                 e.preventDefault();
@@ -238,6 +264,11 @@ function initGhostList() {
     checkGhostMatch();
 }
 
+/**
+ * Handles exclusion of a ghost card.
+ * @param {string} name - Ghost name.
+ * @param {HTMLElement} card - Card element.
+ */
 function toggleGhostExclusion(name, card) {
     if (excludedGhosts.includes(name)) {
         excludedGhosts = excludedGhosts.filter(g => g !== name);
@@ -247,6 +278,10 @@ function toggleGhostExclusion(name, card) {
     checkGhostMatch();
 }
 
+/**
+ * Re‑evaluates which ghosts match the current evidence selection.
+ * Updates visibility and counts.
+ */
 function checkGhostMatch() {
     let visibleCount = 0;
     const ghostCards = document.querySelectorAll('.ghost-card');
@@ -259,11 +294,7 @@ function checkGhostMatch() {
 
         // 1. Must have all selected evidences
         for (const ev of selectedEvidences) {
-            if (!ghost.evidences.includes(ev)) {
-                // Special case for Mimic fake orb (Orb is NOT in its set in data, but it has a guaranteed orb)
-                // Actually my data.js for Mimic has 4 evidences: ["Spirit Box", "Freezing Temperatures", "Fingerprints", "Ghost Orb"]
-                // Let me double check data.js
-                if (name === "The Mimic" && ev === "Ghost Orb") continue;
+            if (!isEvidenceAllowedForGhost(ghost, ev)) {
                 match = false;
                 break;
             }
@@ -308,6 +339,9 @@ function checkGhostMatch() {
     updatePossibleEvidences();
 }
 
+/**
+ * Highlights evidence buttons that are impossible given the current visible ghosts.
+ */
 function updatePossibleEvidences() {
     const t = TRANSLATIONS[currentLang];
     const ghostCards = Array.from(document.querySelectorAll('.ghost-card')).filter(c => !c.classList.contains('hidden') && !c.classList.contains('manually-excluded'));
@@ -343,6 +377,9 @@ function initLanguage() {
     updateLanguage();
 }
 
+/**
+ * Updates all UI text to the currently selected language.
+ */
 function updateLanguage() {
     const t = TRANSLATIONS[currentLang];
 
@@ -377,6 +414,9 @@ function updateLanguage() {
     }
 }
 
+/**
+ * Resets all selections, exclusions and UI state.
+ */
 function resetAll() {
     selectedEvidences = [];
     excludedEvidences = [];
